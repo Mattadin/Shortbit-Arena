@@ -1,3 +1,8 @@
 const User = require('./User');
+const Character = require('./Character');
 
-module.exports = { User };
+User.hasOne(Character, {
+  foreignKey: 'id',
+});
+
+module.exports = { User, Character };

@@ -62,15 +62,18 @@ Entity = () => {
 
 Player = (id) => {
   let self = Entity();
-  (self.id = id),
-    (self.number = '' + Math.floor(10 * Math.random())),
-    (self.pressingRight = false),
-    (self.pressingLeft = false),
-    (self.pressingUp = false),
-    (self.pressingDown = false),
-    (self.pressingFire = false),
-    (self.mouseAngle = 0),
-    (self.maxSpd = 10);
+  self.id = id;
+  self.number = '' + Math.floor(10 * Math.random());
+  self.pressingRight = false;
+  self.pressingLeft = false;
+  self.pressingUp = false;
+  self.pressingDown = false;
+  self.pressingAttack = false;
+  self.mouseAngle = 0;
+  self.maxSpd = 10;
+  self.hp = 100;
+  self.hpMax = 100;
+  self.level = 0;
 
   let super_update = self.update;
   self.update = () => {
@@ -103,7 +106,32 @@ Player = (id) => {
       self.spdY = 0;
     }
   };
+
+  self.getInitPack = () => {
+    return {
+      id: self.id,
+      x: self.x,
+      y: self.y,
+      number: self.number,
+      hp: self.hp,
+      hpMax: self.hpMax,
+      level: self.level,
+    };
+  };
+
+  self.getUpdatePack = () => {
+    return {
+      id: self.id,
+      x: self.x,
+      y: self.y,
+      hp: self.hp,
+      level: self.level,
+    };
+  };
+
   Player.list[id] = self;
+
+  initPack.player.push(self.getInitPack());
   return self;
 };
 
@@ -126,10 +154,24 @@ Player.onConnect = (socket) => {
       player.mouseAngle = data.state;
     }
   });
+
+  socket.emit('init', {
+    player: Player.getAllInitPack(),
+    projectile: Projectile.getAllInitPack(),
+  });
+};
+
+Player.getAllInitPack = () => {
+  let players = [];
+  for (let i in Player.list) {
+    players.push(Player.list[i].getInitPack());
+  }
+  return players;
 };
 
 Player.onDisconnect = (socket) => {
   delete Player.list[socket.id];
+  removePack.player.push(socket.id);
 };
 
 Player.update = () => {
@@ -137,11 +179,7 @@ Player.update = () => {
   for (let i in Player.list) {
     let player = Player.list[i];
     player.update();
-    pack.push({
-      x: player.x,
-      y: player.y,
-      number: player.number,
-    });
+    pack.push(player.getUpdatePack());
   }
   return pack;
 };
@@ -165,12 +203,37 @@ Projectile = (shooter, angle) => {
     for (let i in Player.list) {
       let p = Player.list[i];
       if (self.getDistance(p) < 32 && self.shooter !== p.id) {
-        // handle collision. ex: hp--;
+        p.hp -= 5;
+        if (p.hp <= 0) {
+          let shooter = Player.list[self.shooter];
+          if (shooter) {
+            shooter.level += 1;
+          }
+          p.hp = p.hpMax;
+          p.x = Math.random() * 500;
+          p.y = Math.random() * 500;
+        }
         self.toRemove = true;
       }
     }
   };
+  self.getInitPack = () => {
+    return {
+      id: self.id,
+      x: self.x,
+      y: self.y,
+    };
+  };
+
+  self.getUpdatePack = () => {
+    return {
+      id: self.id,
+      x: self.x,
+      y: self.y,
+    };
+  };
   Projectile.list[self.id] = self;
+  initPack.projectile.push(self.getInitPack());
   return self;
 };
 Projectile.list = {};
@@ -182,14 +245,20 @@ Projectile.update = () => {
     projectile.update();
     if (projectile.toRemove === true) {
       delete Projectile.list[i];
+      removePack.projectile.push(projectile.id);
     } else {
-      pack.push({
-        x: projectile.x,
-        y: projectile.y,
-      });
+      pack.push(projectile.getUpdatePack());
     }
   }
   return pack;
+};
+
+Projectile.getAllInitPack = () => {
+  let projectiles = [];
+  for (let i in Projectile.list) {
+    projectiles.push(Projectile.list[i].getInitPack());
+  }
+  return projectiles;
 };
 
 // set me to false on release!
@@ -225,6 +294,10 @@ io.sockets.on('connection', (socket) => {
   console.log('socket connection');
 });
 
+let initPack = { player: [], projectile: [] };
+let removePack = { player: [], projectile: [] };
+
+// every frame update the game state and empty arrays to avoid duplication
 setInterval(() => {
   let pack = {
     player: Player.update(),
@@ -233,6 +306,12 @@ setInterval(() => {
 
   for (let i in SOCKET_LIST) {
     let socket = SOCKET_LIST[i];
-    socket.emit('newPositions', pack);
+    socket.emit('init', initPack);
+    socket.emit('update', pack);
+    socket.emit('remove', removePack);
   }
+  initPack.player = [];
+  initPack.projectile = [];
+  removePack.player = [];
+  removePack.projectile = [];
 }, 40);
