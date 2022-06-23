@@ -17,6 +17,8 @@
         </form>
 <script src="/socket.io/socket.io.js"></script>
 <script>
+    const WIDTH = 500;
+    const HEIGHT = 500;
     const socket = io();
 
     // chat/canvas stuff
@@ -25,6 +27,14 @@
     const chatForm = document.getElementById('chat-form');
     const ctx = document.getElementById("ctx").getContext("2d");
     ctx.font = '30px Arial';
+
+    const Img = {};
+    Img.player = new Image();
+    Img.player.src = '/client/assets/img/penguin.png';
+    Img.projectile = new Image();
+    Img.projectile.src = '/client/assets/img/snowball.jpg';
+    Img.map = new Image();
+    Img.map.src = '/client/assets/img/map.png'
 
     socket.on('addToChat', (data)=> {
         chatText.innerHTML += '<div>' + data + '</div>';
@@ -63,11 +73,23 @@
         self.level = initPack.level;
          // draws our characters, their hp bars and their levels.
         self.draw = ()=> {
-            let hpWidth = 30 * self.hp / self.hpMax;
-            ctx.fillRect(self.x - hpWidth/2, self.y - 40, hpWidth, 4);
-            ctx.fillText(self.number, self.x, self.y);
+            let x= self.x - Player.list[selfId].x + WIDTH/2;
+            let y = self.y - Player.list[selfId].y + HEIGHT /2;
 
-            ctx.fillText(self.level, self.x, self.y-60);
+            let width = Img.player.width/16;
+            let height = Img.player.height/16;
+
+            let hpWidth = 30 * self.hp / self.hpMax;
+            ctx.fillStyle = 'red';
+            ctx.fillRect(x - hpWidth/2, y - 40, hpWidth, 4);
+            // setting parameters for how to use the player images to render our user's sprites
+
+            ctx.drawImage(Img.player,
+            0, 0, Img.player.width, Img.player.height,
+            x-width/2, y-height/2, width, height);
+
+
+            // ctx.fillText(self.level, self.x, self.y-60);
         }
         Player.list[self.id] = self;
         return self;
@@ -86,7 +108,14 @@
         self.y = initPack.y;
 
         self.draw = ()=> {
-            ctx.fillRect(self.x-5, self.y-5,10,10);
+            let width = Img.projectile.width/8;
+            let height = Img.projectile.height/8;
+
+            let x= self.x - Player.list[selfId].x + WIDTH/2;
+            let y = self.y - Player.list[selfId].y + HEIGHT /2;
+
+            ctx.drawImage(Img.projectile,
+            0, 0, Img.projectile.width, Img.projectile.height, x-width/2, y-height/2, width, height);
         }
         Projectile.list[self.id] = self;
         return self;
@@ -97,7 +126,12 @@
 
     // creates a new player and projectile and adds them to the player and projectile list
     // expect: {player : [{id:123,number:'1',x:0,y:0},{id:1,number:'2',x:0,y:0}], projectile:[]}
+    let selfId = null;
+
     socket.on('init', (data)=> {
+        if(data.selfId) {
+            selfId = data.selfId;
+        }
         for(let i = 0 ; i < data.player.length; i++) {
             new Player (data.player[i]);
         }
@@ -160,7 +194,12 @@
 
     // Loop through the players and projectile lists and draw them on the canvas.
     setInterval(()=> {
+        if(!selfId) {
+            return
+        };
         ctx.clearRect(0,0,500,500);
+        drawMap();
+        drawLevel();
         for(let i in Player.list) {
             Player.list[i].draw();
         }
@@ -168,6 +207,17 @@
             Projectile.list[i].draw();
         }
     }, 40);
+
+    let drawMap = ()=> {
+        let x = WIDTH/2 - Player.list[selfId].x;
+        let y = HEIGHT/2 - Player.list[selfId].y;
+        ctx.drawImage(Img.map, x, y);
+    }
+
+    let drawLevel = ()=> {
+        ctx.fillStyle = 'black';
+        ctx.fillText(Player.list[selfId].level,0,30);
+    }
 
     document.onkeydown = (event)=> {
         // key 68 = d

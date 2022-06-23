@@ -1,12 +1,21 @@
 const path = require('path');
-const session = require('express-session');
 const express = require('express');
+const session = require('express-session');
+const MongoStore = require('connect-mongo');
+const bcrypt = require('bcrypt');
 const app = express();
 const routes = require('./controllers');
 const server = require('http').Server(app);
-const sequelize = require('./config/connection');
-const SequelizeStore = require('connect-session-sequelize')(session.Store);
+const { User } = require('./models');
+const passport = require('passport');
+const db = require('./config/connection');
 const io = require('socket.io')(server, {});
+const {
+  serialize,
+  deSerialize,
+  strategy,
+  passAuth,
+} = require('./config/passport-config');
 
 const PORT = process.env.PORT || 3001;
 
@@ -15,26 +24,41 @@ const sess = {
   cookie: {},
   resave: false,
   saveUninitialized: true,
-  store: new SequelizeStore({
-    db: sequelize,
+  store: MongoStore.create({
+    mongooseConnection: db,
+    mongoUrl: 'mongodb://localhost:27017/polarpalaceDB',
   }),
 };
 
+// middleware
 app.use('/client', express.static(path.join(__dirname + '/client')));
+app.use(express.static(__dirname + '/views'));
 app.use(session(sess));
+app.use(passport.initialize());
+app.use(passport.session(sess));
+app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 app.use(routes);
+app.set('view-engine', 'ejs');
 
 app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/views/intro.html');
+  res.render('intro.ejs');
 });
 
-sequelize.sync({ force: false }).then(() => {
-  server.listen(PORT, () => console.log(`Now listening at ${PORT}`));
+app.get('/findDb/:email', (req, res) => {
+  User.find({ email: req.params.email }, (err, result) => {
+    if (err) {
+      res.status(500).json({ message: 'Internal server error' });
+    }
+    res.status(200).json(result);
+  });
 });
 
-console.log(`Now listening at ${PORT}`);
+db.once('open', () => {
+  server.listen(PORT, () => {
+    console.log(`Server listening on ${PORT}`);
+  });
+});
 
 let SOCKET_LIST = {};
 
@@ -156,6 +180,7 @@ Player.onConnect = (socket) => {
   });
 
   socket.emit('init', {
+    selfId: socket.id,
     player: Player.getAllInitPack(),
     projectile: Projectile.getAllInitPack(),
   });
@@ -187,8 +212,8 @@ Player.update = () => {
 Projectile = (shooter, angle) => {
   let self = Entity();
   self.id = Math.random();
-  self.spdX = Math.cos((angle / 180) * Math.PI) * 10;
-  self.spdY = Math.sin((angle / 180) * Math.PI) * 10;
+  self.spdX = Math.cos((angle / 180) * Math.PI) * 20;
+  self.spdY = Math.sin((angle / 180) * Math.PI) * 20;
   self.shooter = shooter;
 
   self.timer = 0;

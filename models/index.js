@@ -1,8 +1,4 @@
 const User = require('./User');
-const Character = require('./Character');
+const mongoose = require('mongoose');
 
-User.hasOne(Character, {
-  foreignKey: 'id',
-});
-
-module.exports = { User, Character };
+module.exports = { User };

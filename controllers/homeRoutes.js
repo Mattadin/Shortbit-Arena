@@ -1,46 +1,40 @@
 const path = require('path');
 const router = require('express').Router();
 const { User } = require('../models');
-const withAuth = require('../utils/auth');
+const {
+  serialize,
+  deSerialize,
+  strategy,
+  passAuth,
+} = require('../config/passport-config');
 
 router.get('/account', async (req, res) => {
   try {
-    res.sendFile('account.html', { root: path.join(__dirname, '../views') });
+    res.render('account.ejs');
   } catch (err) {
     res.status(500).json(err);
   }
 });
 
-router.get('/dashboard', withAuth, async (req, res) => {
+router.get('/dashboard', async (req, res) => {
   try {
-    res.sendFile('dashboard.html', { root: path.join(__dirname, '../views') });
+    res.render('dashboard.ejs');
   } catch (err) {
     res.status(500).json(err);
   }
 });
 
-router.get('/signup', async (req, res) => {
+router.get('/register', async (req, res) => {
   try {
-    res.sendFile('register.html', { root: path.join(__dirname, '../views') });
+    res.render('register.ejs');
   } catch (err) {
     res.status(500).json(err);
   }
 });
 
-router.get('/game', withAuth, async (req, res) => {
+router.get('/game', async (req, res) => {
   res.sendFile('index.html', {
     root: path.join(__dirname, '../client'),
-  });
-});
-
-router.get('/login', (req, res) => {
-  if (req.session.loggedIn) {
-    res.redirect('/dashboard');
-    return;
-  }
-
-  res.sendFile('account.html', {
-    root: path.join(__dirname, '../views'),
   });
 });
 
