@@ -7,14 +7,28 @@
     <title>Polar Palace</title>
 </head>
 <body>
-        <canvas id="ctx" width="500" height="500" style="border:1px solid #000000;"></canvas>
-        
-        <div id="chat-text" style="width:500x;height:100px;overflow-y:scroll">
-            <div>Welcome to the game!</div>
+    <div id="gameDiv">
+        <div id="game" style="position: absolute; top: 8px; left: 8px; width:500px; height:500px">
+            <canvas id="ctx" width="500" height="500" style="position: absolute;border:1px solid #000000;"></canvas>
+            <canvas id="ctx-ui" width="500" height="500" style="position: absolute;border:1px solid #000000;"></canvas>
+
+            <div id="ui" style="position:absolute;width:500px;height:500px;">
+                <button onClick="changeMap()" style="position:absolute;bottom:0px;left:0px;">
+                    Change Map
+                </button>
+            </div>
         </div>
-        <form id="chat-form">
-            <input id="chat-input" type="text" style="width:500px"></input>
-        </form>
+
+        <div id="belowGame" style="margin-top:520px">
+            <div id="chat-text" style="width:500x;height:100px;overflow-y:scroll">
+                <div>Welcome to the game!</div>
+            </div>
+    
+            <form id="chat-form">
+                <input id="chat-input" type="text" style="width:500px"></input>
+            </form>
+        </div>
+    </div>
 <script src="/socket.io/socket.io.js"></script>
 <script>
     const WIDTH = 500;
@@ -26,15 +40,19 @@
     const chatInput = document.getElementById('chat-input');
     const chatForm = document.getElementById('chat-form');
     const ctx = document.getElementById("ctx").getContext("2d");
-    ctx.font = '30px Arial';
+    const ctxUi = document.getElementById("ctx-ui").getContext("2d");
+    ctxUi.font = '30px Arial';
 
     const Img = {};
     Img.player = new Image();
     Img.player.src = '/client/assets/img/penguin.png';
     Img.projectile = new Image();
     Img.projectile.src = '/client/assets/img/snowball.jpg';
-    Img.map = new Image();
-    Img.map.src = '/client/assets/img/map.png'
+    Img.map = {};
+    Img.map['tundra'] = new Image();
+    Img.map['tundra'].src = '/client/assets/img/map.png'
+    Img.map['palace'] = new Image();
+    Img.map['palace'].src = '/client/assets/img/map2.png'
 
     socket.on('addToChat', (data)=> {
         chatText.innerHTML += '<div>' + data + '</div>';
@@ -54,6 +72,12 @@
         }
         chatInput.value = '';
     }
+
+    // UI Functions
+
+    const changeMap = ()=>{
+        socket.emit('changeMap');
+    };
     
     // game stuff
 
@@ -71,8 +95,12 @@
         self.hp = initPack.hp;
         self.hpMax = initPack.hpMax;
         self.level = initPack.level;
+        self.map = initPack.map;
          // draws our characters, their hp bars and their levels.
         self.draw = ()=> {
+            if(Player.list[selfId].map !== self.map) {
+                return;
+            }
             let x= self.x - Player.list[selfId].x + WIDTH/2;
             let y = self.y - Player.list[selfId].y + HEIGHT /2;
 
@@ -87,9 +115,6 @@
             ctx.drawImage(Img.player,
             0, 0, Img.player.width, Img.player.height,
             x-width/2, y-height/2, width, height);
-
-
-            // ctx.fillText(self.level, self.x, self.y-60);
         }
         Player.list[self.id] = self;
         return self;
@@ -106,8 +131,12 @@
         self.id = initPack.id;
         self.x = initPack.x;
         self.y = initPack.y;
+        self.map = initPack.map;
 
         self.draw = ()=> {
+            if(Player.list[selfId].map !== self.map) {
+                return;
+            }
             let width = Img.projectile.width/8;
             let height = Img.projectile.height/8;
 
@@ -162,6 +191,9 @@
                 if(pack.level !== undefined) {
                     p.level = pack.level;
                 }
+                if(pack.map !== undefined) {
+                    p.map = pack.map;
+                }
             }
         }
         for (let i = 0; i < data.projectile.length; i++) {
@@ -209,15 +241,21 @@
     }, 40);
 
     let drawMap = ()=> {
-        let x = WIDTH/2 - Player.list[selfId].x;
-        let y = HEIGHT/2 - Player.list[selfId].y;
-        ctx.drawImage(Img.map, x, y);
+        let player = Player.list[selfId];
+        let x = WIDTH/2 - player.x;
+        let y = HEIGHT/2 - player.y;
+        ctx.drawImage(Img.map[player.map], x, y);
     }
 
     let drawLevel = ()=> {
-        ctx.fillStyle = 'black';
-        ctx.fillText(Player.list[selfId].level,0,30);
+        if(lastLevel === Player.list[selfId].level) {
+            return;
+        }
+        lastLevel = Player.list[selfId].level;
+        ctxUi.fillStyle = 'black';
+        ctxUi.fillText(Player.list[selfId].level,0,30);
     }
+    let lastLevel = null;
 
     document.onkeydown = (event)=> {
         // key 68 = d

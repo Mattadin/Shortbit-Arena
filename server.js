@@ -62,14 +62,29 @@ db.once('open', () => {
 
 let SOCKET_LIST = {};
 
-Entity = () => {
+Entity = (param) => {
   let self = {
     x: 250,
     y: 250,
     spdX: 0,
     spdY: 0,
     id: '',
+    map: 'map',
   };
+  if (param) {
+    if (param.x) {
+      self.x = param.x;
+    }
+    if (param.y) {
+      self.y = param.y;
+    }
+    if (param.map) {
+      self.map = param.map;
+    }
+    if (param.id) {
+      self.id = param.id;
+    }
+  }
   self.update = () => {
     self.updatePosition();
   };
@@ -84,9 +99,8 @@ Entity = () => {
   return self;
 };
 
-Player = (id) => {
-  let self = Entity();
-  self.id = id;
+Player = (param) => {
+  let self = Entity(param);
   self.number = '' + Math.floor(10 * Math.random());
   self.pressingRight = false;
   self.pressingLeft = false;
@@ -109,9 +123,13 @@ Player = (id) => {
     }
   };
   self.shootProjectile = (angle) => {
-    let p = Projectile(self.id, angle);
-    p.x = self.x;
-    p.y = self.y;
+    Projectile({
+      shooter: self.id,
+      angle: angle,
+      x: self.x,
+      y: self.y,
+      map: self.map,
+    });
   };
 
   self.updateSpd = () => {
@@ -140,6 +158,7 @@ Player = (id) => {
       hp: self.hp,
       hpMax: self.hpMax,
       level: self.level,
+      map: self.map,
     };
   };
 
@@ -150,10 +169,11 @@ Player = (id) => {
       y: self.y,
       hp: self.hp,
       level: self.level,
+      map: self.map,
     };
   };
 
-  Player.list[id] = self;
+  Player.list[self.id] = self;
 
   initPack.player.push(self.getInitPack());
   return self;
@@ -162,7 +182,14 @@ Player = (id) => {
 Player.list = {};
 
 Player.onConnect = (socket) => {
-  let player = Player(socket.id);
+  let map = 'tundra';
+  if (Math.random() < 0.5) {
+    map = 'palace';
+  }
+  let player = Player({
+    id: socket.id,
+    map: map,
+  });
   socket.on('keyPress', (data) => {
     if (data.inputId === 'left') {
       player.pressingLeft = data.state;
@@ -176,6 +203,14 @@ Player.onConnect = (socket) => {
       player.pressingAttack = data.state;
     } else if (data.inputId === 'mouseAngle') {
       player.mouseAngle = data.state;
+    }
+  });
+
+  socket.on('changeMap', (data) => {
+    if (player.map === 'tundra') {
+      player.map = 'palace';
+    } else {
+      player.map = 'tundra';
     }
   });
 
@@ -209,25 +244,30 @@ Player.update = () => {
   return pack;
 };
 
-Projectile = (shooter, angle) => {
-  let self = Entity();
+Projectile = (param) => {
+  let self = Entity(param);
   self.id = Math.random();
-  self.spdX = Math.cos((angle / 180) * Math.PI) * 20;
-  self.spdY = Math.sin((angle / 180) * Math.PI) * 20;
-  self.shooter = shooter;
+  self.angle = param.angle;
+  self.spdX = Math.cos((param.angle / 180) * Math.PI) * 20;
+  self.spdY = Math.sin((param.angle / 180) * Math.PI) * 20;
+  self.shooter = param.shooter;
 
   self.timer = 0;
   self.toRemove = false;
   let super_update = self.update;
   self.update = function () {
-    if (self.timer++ > 100) {
+    if (self.timer++ > 20) {
       self.toRemove = true;
     }
     super_update();
 
     for (let i in Player.list) {
       let p = Player.list[i];
-      if (self.getDistance(p) < 32 && self.shooter !== p.id) {
+      if (
+        self.map === p.map &&
+        self.getDistance(p) < 32 &&
+        self.shooter !== p.id
+      ) {
         p.hp -= 5;
         if (p.hp <= 0) {
           let shooter = Player.list[self.shooter];
@@ -247,6 +287,7 @@ Projectile = (shooter, angle) => {
       id: self.id,
       x: self.x,
       y: self.y,
+      map: self.map,
     };
   };
 
