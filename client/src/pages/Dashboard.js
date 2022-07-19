@@ -32,13 +32,15 @@ const Dashboard = () => {
   }
 
   return (
-    <div>
-      <p>DASHBOARD BAY BAY!!</p>
-      <p>
-        Success! You may now head <Link to="/game">to the game</Link>
-      </p>
-      ;
-    </div>
+    <main className="container">
+      <div className="enter__game">
+        <p>
+          <Link className="enter__card" to="/game">
+            Enter Game!
+          </Link>
+        </p>
+      </div>
+    </main>
   );
 };
 

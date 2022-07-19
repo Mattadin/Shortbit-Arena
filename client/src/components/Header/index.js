@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-
+import './header.css';
 import Auth from '../../utils/auth';
 
 const Header = () => {
@@ -9,24 +9,24 @@ const Header = () => {
     Auth.logout();
   };
   return (
-    <header className="">
-      <div className="">
+    <header>
+      <div className="header__container">
         <div>
           {Auth.loggedIn() ? (
             <>
-              <Link className="" to="/dashboard">
+              <Link className="profile__card" to="/dashboard">
                 {Auth.getProfile().data.displayName}'s profile
               </Link>
-              <button className="" onClick={logout}>
+              <button className="logout__card" onClick={logout}>
                 Logout
               </button>
             </>
           ) : (
             <>
-              <Link className="" to="/login">
+              <Link className="cta__card" to="/login">
                 Login
               </Link>
-              <Link className="" to="/signup">
+              <Link className="cta__card" to="/signup">
                 Signup
               </Link>
             </>

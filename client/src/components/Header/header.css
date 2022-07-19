@@ -1,0 +1,71 @@
+.header__container {
+    text-align: right;
+    height: 100%;
+    position: relative;
+    padding: 3rem;
+}
+
+.cta__card {
+    background: var(--color-bg-variant);
+    border: 1px solid transparent;
+    border-radius: 1rem;
+    padding: 2rem;
+    margin: 0.5rem;
+    text-align: center;
+    color: var(--color-primary);
+}
+
+.cta__card:hover {
+    background: transparent;
+    border-color: var(--color-primary-variant);
+    transition: var(--transition);
+}
+
+.profile__card {
+    background: var(--color-bg-variant);
+    position: relative;
+    border: 1px solid transparent;
+    padding: 2rem;
+    margin: 0.5rem;
+    border-radius: 2rem;
+    text-align: center;
+    color: var(--color-primary);
+}
+
+.profile__card:hover {
+    background: transparent;
+    border-color: var(--color-primary-variant);
+    transition: var(--transition);
+}
+
+.logout__card {
+    background: var(--color-bg-variant);
+    border: 1px solid transparent;
+    border-radius: 1rem;
+    padding: 2rem;
+    text-align: center;
+    color: var(--color-primary);
+}
+
+.logout__card:hover {
+    background: transparent;
+    color: var(--color-white);
+    border-color: var(--color-primary-variant);
+    transition: var(--transition);
+    cursor:pointer;
+}
+
+/* Tablet media queries */
+@media screen and (max-width: 1024px) {
+    header {
+        height: 68vh;
+    }
+} 
+
+/* Small device media queries */
+ @media screen and (max-width: 600px) {
+    header {
+        height: 50vh;
+        width: var(--container-width-sm);
+    }
+}

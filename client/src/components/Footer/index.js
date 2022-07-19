@@ -1,14 +1,15 @@
 import React from 'react';
+import './footer.css';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const Footer = () => {
   const location = useLocation();
   const navigate = useNavigate();
   return (
-    <footer className="">
-      <div className="">
+    <footer>
+      <div className="footer__container">
         {location.pathname !== '/' && (
-          <button className="" onClick={() => navigate(-1)}>
+          <button className="footer__button" onClick={() => navigate(-1)}>
             &larr; Go Back
           </button>
         )}

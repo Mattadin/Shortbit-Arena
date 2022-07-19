@@ -1,0 +1,31 @@
+footer {
+    padding: 3rem 0rem;
+    text-align: center;
+    font-size: 0.9rem;
+    margin-top: 7rem;
+}
+
+.footer__container {
+    text-align: left;
+    height: 100%;
+    position: relative;
+    left: 20px;
+    bottom: 20px;
+}
+
+
+.footer__button {
+    background: var(--color-bg-variant);
+    border: 1px solid transparent;
+    border-radius: 1rem;
+    padding: 2rem;
+    text-align: center;
+    color: var(--color-primary);
+}
+
+.footer__button:hover {
+    background: transparent;
+    border-color: var(--color-primary-variant);
+    transition: var(--transition);
+    cursor: pointer;
+}

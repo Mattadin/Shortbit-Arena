@@ -3,11 +3,14 @@ import { Link } from 'react-router-dom';
 
 const Home = () => {
   return (
-    <main>
-      <p>INTRO SCREEN LESS GO BOIS</p>
-      <p>
-        Success! You may now head <Link to="/login">to login.</Link>
-      </p>
+    <main className="container">
+      <div className="enter__container">
+        <p>
+          <Link className="enter__card" to="/login">
+            Enter.
+          </Link>
+        </p>
+      </div>
     </main>
   );
 };

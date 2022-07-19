@@ -40,9 +40,9 @@ const Signup = () => {
   };
 
   return (
-    <main className="">
+    <main className="container">
       <div className="">
-        <div className="">
+        <div className="container">
           <h4 className="">Sign Up</h4>
           <div className="">
             {data ? (
@@ -51,9 +51,9 @@ const Signup = () => {
                 <Link to="/login">back to login.</Link>
               </p>
             ) : (
-              <form onSubmit={handleFormSubmit}>
+              <form className="form__style" onSubmit={handleFormSubmit}>
                 <input
-                  className=""
+                  className="input__style"
                   placeholder="Your full name"
                   name="fullName"
                   type="text"
@@ -61,7 +61,7 @@ const Signup = () => {
                   onChange={handleChange}
                 />
                 <input
-                  className=""
+                  className="input__style"
                   placeholder="Your display name"
                   name="displayName"
                   type="text"
@@ -69,7 +69,7 @@ const Signup = () => {
                   onChange={handleChange}
                 />
                 <input
-                  className="form-input"
+                  className="input__style"
                   placeholder="Your email"
                   name="email"
                   type="email"
@@ -77,7 +77,7 @@ const Signup = () => {
                   onChange={handleChange}
                 />
                 <input
-                  className="form-input"
+                  className="input__style"
                   placeholder="Your password"
                   name="password"
                   type="password"
@@ -85,7 +85,7 @@ const Signup = () => {
                   onChange={handleChange}
                 />
                 <button
-                  className="btn btn-block btn-primary"
+                  className="form__submit"
                   style={{ cursor: 'pointer' }}
                   type="submit"
                 >

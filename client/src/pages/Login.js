@@ -41,9 +41,9 @@ const Login = (props) => {
   };
 
   return (
-    <main className="">
+    <main className="container">
       <div className="">
-        <div className="">
+        <div className="container">
           <h4 className="">Login</h4>
           <div className="">
             {data ? (
@@ -51,9 +51,9 @@ const Login = (props) => {
                 Success! You may now head <Link to="/">To the dashboard.</Link>
               </p>
             ) : (
-              <form onSubmit={handleFormSubmit}>
+              <form className="form__style" onSubmit={handleFormSubmit}>
                 <input
-                  className=""
+                  className="input__style"
                   placeholder="Your email"
                   name="email"
                   type="email"
@@ -61,7 +61,7 @@ const Login = (props) => {
                   onChange={handleChange}
                 />
                 <input
-                  className=""
+                  className="input__style"
                   placeholder="Your password"
                   name="password"
                   type="password"
@@ -69,7 +69,7 @@ const Login = (props) => {
                   onChange={handleChange}
                 />
                 <button
-                  className=""
+                  className="form__submit"
                   style={{ cursor: 'pointer' }}
                   type="submit"
                 >
