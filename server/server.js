@@ -8,15 +8,17 @@ const db = require('./config/connection');
 const io = require('socket.io')(server, {});
 const { Entity, Player, Projectile } = require('./Entities');
 const { Inventory, Item } = require('../js/Inventory');
+const { authMiddleware } = require('./utils/auth');
 const apolServer = new ApolloServer({
   typeDefs,
   resolvers,
+  context: authMiddleware,
 });
 
 const PORT = process.env.PORT || 3001;
 
 // middleware
-app.use('/client', express.static(path.join(__dirname + '/client')));
+app.use('/client', express.static(path.join(__dirname + '../client')));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
@@ -39,7 +41,7 @@ const startApolloServer = async (typeDefs, resolvers) => {
 
 db.once('open', () => {
   server.listen(PORT, () => {
-    console.log(`Server listening on ${PORT}`);
+    console.log(`Server listening on ${PORT}!`);
     console.log(
       `Use GraphQL at http://localhost:${PORT}${apolServer.graphqlPath}`
     );

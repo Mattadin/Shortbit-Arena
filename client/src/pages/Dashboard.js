@@ -1,21 +1,26 @@
 import React from 'react';
 import { Navigate, Link, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
-import { QUERY_USER, QUERY_ME } from '../utils/queries';
+import { QUERY_ME, QUERY_USER } from '../utils/queries';
 
 import Auth from '../utils/auth';
 
 const Dashboard = () => {
   const { email: userParam } = useParams();
 
-  const { data } = useQuery(userParam ? QUERY_USER : QUERY_ME, {
+  const { loading, data } = useQuery(userParam ? QUERY_USER : QUERY_ME, {
     variables: { email: userParam },
   });
 
+  console.log(data);
+  console.log(userParam);
+
   const user = data?.me || data?.user || {};
   if (Auth.loggedIn() && Auth.getProfile().data.email === userParam) {
-    console.log(user);
     return <Navigate to="/dashboard" />;
+  }
+  if (loading) {
+    return <div>Loading...</div>;
   }
   if (!user?.email) {
     return (
