@@ -7,7 +7,7 @@ const { typeDefs, resolvers } = require('./schemas');
 const db = require('./config/connection');
 const io = require('socket.io')(server, {});
 const { Entity, Player, Projectile } = require('./Entities');
-const { Inventory, Item } = require('../js/Inventory');
+const { Inventory, Item } = require('../client/src/Inventory');
 const { authMiddleware } = require('./utils/auth');
 const apolServer = new ApolloServer({
   typeDefs,
@@ -21,10 +21,6 @@ const PORT = process.env.PORT || 3001;
 app.use('/client', express.static(path.join(__dirname + '../client')));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
-
-// app.get('/', (req, res) => {
-//   res.render('intro.ejs');
-// });
 
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '../client/build')));

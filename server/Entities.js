@@ -1,4 +1,4 @@
-const { Inventory } = require('../js/Inventory');
+const { Inventory } = require('../client/src/Inventory');
 
 let initPack = { player: [], projectile: [] };
 let removePack = { player: [], projectile: [] };
