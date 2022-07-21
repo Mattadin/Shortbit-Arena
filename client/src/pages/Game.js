@@ -1,4 +1,10 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
+import TUNDRA from '../img/map.png';
+// import PALACE from '../img/map2.png';
+import SNOWBALL from '../img/snowball.png';
+import PENGUIN from '../img/penguin.png';
+import { Player } from '../classes/Player';
+import { Projectile } from '../classes/Projectile';
 
 // Import the `useParams()` hook
 import { useParams } from 'react-router-dom';
@@ -13,24 +19,37 @@ const Game = () => {
   const HEIGHT = 500;
   const socket = io();
 
-  // chat/canvas stuff
-  const chatText = document.getElementById('chat-text');
-  const chatInput = document.getElementById('chat-input');
-  const chatForm = document.getElementById('chat-form');
-  const ctx = document.getElementById('ctx').getContext('2d');
-  const ctxUi = document.getElementById('ctx-ui').getContext('2d');
-  ctxUi.font = '30px Arial';
-
   const Img = {};
   Img.player = new Image();
-  Img.player.src = '/client/assets/img/penguin.png';
+  Img.player.src = { PENGUIN };
   Img.projectile = new Image();
-  Img.projectile.src = '/client/assets/img/snowball.png';
+  Img.projectile.src = { SNOWBALL };
   Img.map = {};
-  Img.map['tundra'] = new Image();
-  Img.map['tundra'].src = '/client/assets/img/map.png';
-  Img.map['palace'] = new Image();
-  Img.map['palace'].src = '/client/assets/img/map2.png';
+  Img.map = new Image();
+  Img.map.src = { TUNDRA };
+
+  // Img.map['palace'] = new Image();
+  // Img.map['palace'].src = { PALACE };
+
+  // chat/canvas stuff
+  const chatText = useRef();
+  const chatInput = useRef();
+  const chatForm = useRef();
+  const canvasRef = useRef(null);
+  const uiRef = useRef(null);
+  // ctxUi.font = '30px Arial';
+
+  console.log(typeof Img.map);
+  console.log(JSON.stringify(Img.map));
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, WIDTH, HEIGHT);
+    ctx.drawImage(Img.map, HEIGHT, WIDTH);
+
+    let {} = { Player, Projectile };
+  }, []);
 
   socket.on('addToChat', (data) => {
     chatText.innerHTML += '<div>' + data + '</div>';
@@ -40,21 +59,21 @@ const Game = () => {
     console.log(data);
   });
 
-  chatForm.onsubmit = (e) => {
-    e.preventDefault();
-    if (chatInput.value[0] === '/') {
-      socket.emit('evalServer', chatInput.values.slice(1));
-    } else if (chatInput.value[0] === '@') {
-      // Chat syntax: @username, message
-      socket.emit('sendPmToServer', {
-        userName: chatInput.value.slice(1, chatInput.value.indexOf(',')),
-        message: chatInput.value.slice(chatInput.value.indexOf(',') + 1),
-      });
-    } else {
-      socket.emit('sendMsgToServer', chatInput.value);
-    }
-    chatInput.value = '';
-  };
+  // chatForm.onsubmit = (e) => {
+  //   e.preventDefault();
+  //   if (chatInput.value[0] === '/') {
+  //     socket.emit('evalServer', chatInput.values.slice(1));
+  //   } else if (chatInput.value[0] === '@') {
+  //     // Chat syntax: @username, message
+  //     socket.emit('sendPmToServer', {
+  //       userName: chatInput.value.slice(1, chatInput.value.indexOf(',')),
+  //       message: chatInput.value.slice(chatInput.value.indexOf(',') + 1),
+  //     });
+  //   } else {
+  //     socket.emit('sendMsgToServer', chatInput.value);
+  //   }
+  //   chatInput.value = '';
+  // };
 
   // UI Functions
 
@@ -74,88 +93,9 @@ const Game = () => {
 
   // initializes a player using a package sent from server, contains all the data for client side
 
-  class Player {
-    constructor(initPack) {
-      let self = {};
-      self.id = initPack.id;
-      self.number = initPack.number;
-      self.x = initPack.x;
-      self.y = initPack.y;
-      self.hp = initPack.hp;
-      self.hpMax = initPack.hpMax;
-      self.level = initPack.level;
-      self.map = initPack.map;
-      // draws our characters and their hp bars
-      self.draw = () => {
-        if (Player.list[selfId].map !== self.map) {
-          return;
-        }
-        let x = self.x - Player.list[selfId].x + WIDTH / 2;
-        let y = self.y - Player.list[selfId].y + HEIGHT / 2;
-
-        let width = Img.player.width / 16;
-        let height = Img.player.height / 16;
-
-        let hpWidth = (30 * self.hp) / self.hpMax;
-        ctx.fillStyle = 'red';
-        ctx.fillRect(x - hpWidth / 2, y - 40, hpWidth, 4);
-        // setting parameters for how to use the player images to render our user's sprites
-
-        ctx.drawImage(
-          Img.player,
-          0,
-          0,
-          Img.player.width,
-          Img.player.height,
-          x - width / 2,
-          y - height / 2,
-          width,
-          height
-        );
-      };
-      Player.list[self.id] = self;
-      return self;
-    }
-  }
-
   Player.list = {};
 
   // initializes a Projectile using a package sent from server, contains all the data for client side
-
-  class Projectile {
-    constructor(initPack) {
-      let self = {};
-      self.id = initPack.id;
-      self.x = initPack.x;
-      self.y = initPack.y;
-      self.map = initPack.map;
-
-      self.draw = () => {
-        if (Player.list[selfId].map !== self.map) {
-          return;
-        }
-        let width = Img.projectile.width / 8;
-        let height = Img.projectile.height / 8;
-
-        let x = self.x - Player.list[selfId].x + WIDTH / 2;
-        let y = self.y - Player.list[selfId].y + HEIGHT / 2;
-
-        ctx.drawImage(
-          Img.projectile,
-          0,
-          0,
-          Img.projectile.width,
-          Img.projectile.height,
-          x - width / 2,
-          y - height / 2,
-          width,
-          height
-        );
-      };
-      Projectile.list[self.id] = self;
-      return self;
-    }
-  }
 
   Projectile.list = {};
 
@@ -231,38 +171,37 @@ const Game = () => {
   // Positional awareness
 
   // Loop through the players and projectile lists and draw them on the canvas.
-  setInterval(() => {
-    if (!selfId) {
-      return;
-    }
-    ctx.clearRect(0, 0, 500, 500);
-    drawMap();
-    drawLevel();
-    for (let i in Player.list) {
-      Player.list[i].draw();
-    }
-    for (let i in Projectile.list) {
-      Projectile.list[i].draw();
-    }
-  }, 40);
+  // setInterval(() => {
+  //   if (!selfId) {
+  //     return;
+  //   }
+  //   drawMap();
+  //   drawLevel();
+  //   for (let i in Player.list) {
+  //     Player.list[i].draw();
+  //   }
+  //   for (let i in Projectile.list) {
+  //     Projectile.list[i].draw();
+  //   }
+  // }, 40);
 
-  let drawMap = () => {
-    let player = Player.list[selfId];
-    let x = WIDTH / 2 - player.x;
-    let y = HEIGHT / 2 - player.y;
-    ctx.drawImage(Img.map[player.map], x, y);
-  };
+  // let drawMap = (ctx) => {
+  //   let player = Player.list[selfId];
+  //   let x = WIDTH / 2 - player.x;
+  //   let y = HEIGHT / 2 - player.y;
+  //   ctx.drawImage(Img.map[player.map], x, y);
+  // };
 
-  let drawLevel = () => {
-    if (lastLevel === Player.list[selfId].level) {
-      return;
-    }
-    lastLevel = Player.list[selfId].level;
-    ctxUi.clearRect(0, 0, 500, 500);
-    ctxUi.fillStyle = 'black';
-    ctxUi.fillText(Player.list[selfId].level, 0, 30);
-  };
-  let lastLevel = null;
+  // let drawLevel = (ctxUi) => {
+  //   if (lastLevel === Player.list[selfId].level) {
+  //     return;
+  //   }
+  //   lastLevel = Player.list[selfId].level;
+  //   ctxUi.clearRect(0, 0, 500, 500);
+  //   ctxUi.fillStyle = 'black';
+  //   ctxUi.fillText(Player.list[selfId].level, 0, 30);
+  // };
+  // let lastLevel = null;
 
   document.onkeydown = (event) => {
     if (event.key === 'd') {
@@ -303,47 +242,32 @@ const Game = () => {
     socket.emit('keyPress', { inputId: 'mouseAngle', state: angle });
   };
 
-  document.oncontextmenu = (event) => {
-    event.preventDefault();
-  };
+  // document.oncontextmenu = (event) => {
+  //   event.preventDefault();
+  // };
 
   return (
     <div id="gameDiv">
       <div
         id="game"
-        style="position: absolute; top: 8px; left: 8px; width:500px; height:500px"
+        // style="position: absolute; top: 8px; left: 8px; width:500px; height:500px"
       >
-        <canvas
-          id="ctx"
-          width="500"
-          height="500"
-          style="position: absolute;border:1px solid #000000;"
-        ></canvas>
-        <canvas
-          id="ctx-ui"
-          width="500"
-          height="500"
-          style="position: absolute;border:1px solid #000000;"
-        ></canvas>
+        <canvas ref={canvasRef}></canvas>
+        <canvas ref={uiRef}></canvas>
 
-        <div id="ui" style="position:absolute;width:500px;height:500px;">
-          <button
-            onClick="changeMap()"
-            style="position:absolute;bottom:0px;left:0px;"
-          >
-            Change Map
-          </button>
+        <div id="ui">
+          <button>Change Map</button>
         </div>
       </div>
 
-      <div id="belowGame" style="margin-top:520px">
-        <div id="chat-text" style="width:500x;height:100px;overflow-y:scroll">
+      <div id="belowGame">
+        <div ref={chatText}>
           <div>Welcome to the game!</div>
         </div>
         <div id="inventory"></div>
 
-        <form id="chat-form">
-          <input id="chat-input" type="text" style="width:500px"></input>
+        <form ref={chatForm}>
+          <input ref={chatText} type="text"></input>
         </form>
       </div>
     </div>
