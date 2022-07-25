@@ -65,7 +65,38 @@
 /* Small device media queries */
  @media screen and (max-width: 600px) {
     header {
-        height: 50vh;
+        text-align: right;
+        height: 25vh;
         width: var(--container-width-sm);
+    }
+
+    .cta__card {
+        background: var(--color-bg-variant);
+        border: 1px solid transparent;
+        border-radius: 1rem;
+        padding: 1rem;
+        margin: 0.25rem;
+        text-align: center;
+        color: var(--color-primary);
+    }
+
+    .profile__card {
+        background: var(--color-bg-variant);
+        position: relative;
+        border: 1px solid transparent;
+        padding: 1rem;
+        margin: 0.25rem;
+        border-radius: 1rem;
+        text-align: center;
+        color: var(--color-primary);
+    }
+
+    .logout__card {
+        background: var(--color-bg-variant);
+        border: 1px solid transparent;
+        border-radius: 1rem;
+        padding: 1rem;
+        text-align: center;
+        color: var(--color-primary);
     }
 }

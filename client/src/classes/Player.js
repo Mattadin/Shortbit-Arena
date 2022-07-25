@@ -1,10 +1,24 @@
-import { Img } from './Img';
+import TUNDRA from '../img/map.png';
+import PALACE from '../img/map2.png';
+import SNOWBALL from '../img/snowball.png';
+import PENGUIN from '../img/penguin.png';
+
+const Img = {};
+Img.player = new Image();
+Img.player.src = PENGUIN;
+Img.projectile = new Image();
+Img.projectile.src = SNOWBALL;
+Img.map = {};
+Img.map['tundra'] = new Image();
+Img.map['tundra'].src = TUNDRA;
+Img.map['palace'] = new Image();
+Img.map['palace'].src = PALACE;
 
 const WIDTH = 500;
 const HEIGHT = 500;
 
 class Player {
-  constructor(initPack) {
+  constructor(initPack, ctx) {
     let self = {};
     self.id = initPack.id;
     self.number = initPack.number;
@@ -15,7 +29,7 @@ class Player {
     self.level = initPack.level;
     self.map = initPack.map;
     // draws our characters and their hp bars
-    self.draw = (ctx) => {
+    self.draw = () => {
       if (Player.list[selfId].map !== self.map) {
         return;
       }
@@ -47,6 +61,8 @@ class Player {
   }
 }
 
+Player.list = {};
+
 let selfId = null;
 
-export { Player };
+export default Player;

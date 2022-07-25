@@ -1,18 +1,33 @@
-import { Img } from './Img';
-import { Player } from './Player';
+import Player from './Player';
+
+import TUNDRA from '../img/map.png';
+import PALACE from '../img/map2.png';
+import SNOWBALL from '../img/snowball.png';
+import PENGUIN from '../img/penguin.png';
 
 const WIDTH = 500;
 const HEIGHT = 500;
 
+const Img = {};
+Img.player = new Image();
+Img.player.src = PENGUIN;
+Img.projectile = new Image();
+Img.projectile.src = SNOWBALL;
+Img.map = {};
+Img.map['tundra'] = new Image();
+Img.map['tundra'].src = TUNDRA;
+Img.map['palace'] = new Image();
+Img.map['palace'].src = PALACE;
+
 class Projectile {
-  constructor(initPack) {
+  constructor(initPack, ctx) {
     let self = {};
     self.id = initPack.id;
     self.x = initPack.x;
     self.y = initPack.y;
     self.map = initPack.map;
 
-    self.draw = (ctx) => {
+    self.draw = () => {
       if (Player.list[selfId].map !== self.map) {
         return;
       }
@@ -39,6 +54,8 @@ class Projectile {
   }
 }
 
+Player.list = {};
+
 let selfId = null;
 
-export { Projectile };
+export default Projectile;

@@ -29,3 +29,31 @@ footer {
     transition: var(--transition);
     cursor: pointer;
 }
+
+/* Small device media queries */
+@media screen and (max-width: 600px) {
+    footer {
+        padding: 0rem 0rem;
+        text-align: center;
+        font-size: 0rem;
+        margin-top: 0rem;
+    }
+    
+    .footer__container {
+        text-align: left;
+        /* height: 100%; */
+        position: relative;
+        left: 0px;
+        bottom: 0px;
+    }
+    
+    
+    .footer__button {
+        background: var(--color-bg-variant);
+        border: 1px solid transparent;
+        border-radius: 0rem;
+        padding: 0rem;
+        text-align: center;
+        color: var(--color-primary);
+    }
+}

@@ -184,13 +184,21 @@ img {
 
 @media screen and (max-width: 600px) {
     .container {
-        width: var(--container-width-sm);
+        width: var(--container-width-sm)
     }
-
-
     .enter__container {
+        position: relative;
         width: var(--container-width-sm);
-        top: 0;
         left: 0;
-    }
+        top: 0;
+      }
+      
+      .enter__card {
+        background: var(--color-bg-variant);
+        border: 1px solid transparent;
+        border-radius: 1rem;
+        padding: 1rem;
+        text-align: center;
+        color: var(--color-primary);
+      }
 }

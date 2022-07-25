@@ -1,10 +1,10 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import TUNDRA from '../img/map.png';
-// import PALACE from '../img/map2.png';
+import PALACE from '../img/map2.png';
 import SNOWBALL from '../img/snowball.png';
 import PENGUIN from '../img/penguin.png';
-import { Player } from '../classes/Player';
-import { Projectile } from '../classes/Projectile';
+import Player from '../classes/Player';
+import Projectile from '../classes/Projectile';
 
 // Import the `useParams()` hook
 import { useParams } from 'react-router-dom';
@@ -15,18 +15,20 @@ import { Inventory, Item } from '../Inventory';
 import { io } from 'https://cdn.socket.io/4.4.1/socket.io.esm.min.js';
 
 const Game = () => {
+  const Img = {};
+  Img.player = new Image();
+  Img.player.src = PENGUIN;
+  Img.projectile = new Image();
+  Img.projectile.src = SNOWBALL;
+  Img.map = {};
+  Img.map['tundra'] = new Image();
+  Img.map['tundra'].src = TUNDRA;
+  Img.map['palace'] = new Image();
+  Img.map['palace'].src = PALACE;
+
   const WIDTH = 500;
   const HEIGHT = 500;
   const socket = io();
-
-  const Img = {};
-  Img.player = new Image();
-  Img.player.src = { PENGUIN };
-  Img.projectile = new Image();
-  Img.projectile.src = { SNOWBALL };
-  Img.map = {};
-  Img.map = new Image();
-  Img.map.src = { TUNDRA };
 
   // Img.map['palace'] = new Image();
   // Img.map['palace'].src = { PALACE };
@@ -39,25 +41,32 @@ const Game = () => {
   const uiRef = useRef(null);
   // ctxUi.font = '30px Arial';
 
-  console.log(typeof Img.map);
-  console.log(JSON.stringify(Img.map));
+  const [image, setImage] = useState(null);
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-    ctx.clearRect(0, 0, WIDTH, HEIGHT);
-    ctx.drawImage(Img.map, HEIGHT, WIDTH);
+    const img = new Image();
+    img.src = TUNDRA;
 
-    let {} = { Player, Projectile };
+    img.onload = () => setImage(img);
   }, []);
+
+  useEffect(() => {
+    console.log({ image, canvasRef });
+    if (image && canvasRef) {
+      const ctx = canvasRef.current.getContext('2d');
+      ctx.fillStyle = 'black';
+      ctx.fillRect(0, 0, 500, 500);
+      ctx.drawImage(image, 0, 0, 500, 500);
+    }
+  }, [image, canvasRef]);
 
   socket.on('addToChat', (data) => {
     chatText.innerHTML += '<div>' + data + '</div>';
   });
 
-  socket.on('evalAnswer', (data) => {
-    console.log(data);
-  });
+  // socket.on('evalAnswer', (data) => {
+  //   console.log(data);
+  // });
 
   // chatForm.onsubmit = (e) => {
   //   e.preventDefault();
@@ -158,6 +167,7 @@ const Game = () => {
 
   //remove
 
+  // Loops through the player list and projectile list and removes things designated for destruction.
   // expect: {player : [12323], projectile:[12323,123123]}
   socket.on('remove', (data) => {
     for (let i = 0; i < data.player.length; i++) {
@@ -170,38 +180,38 @@ const Game = () => {
 
   // Positional awareness
 
-  // Loop through the players and projectile lists and draw them on the canvas.
-  // setInterval(() => {
-  //   if (!selfId) {
-  //     return;
-  //   }
-  //   drawMap();
-  //   drawLevel();
-  //   for (let i in Player.list) {
-  //     Player.list[i].draw();
-  //   }
-  //   for (let i in Projectile.list) {
-  //     Projectile.list[i].draw();
-  //   }
-  // }, 40);
+  // Loop through the players and projectile lists and draw them on the canvas 25 times per second.
+  setInterval((ctx, ctxUi) => {
+    if (!selfId) {
+      return;
+    }
+    drawMap(ctx);
+    drawLevel(ctxUi);
+    for (let i in Player.list) {
+      Player.list[i].draw();
+    }
+    for (let i in Projectile.list) {
+      Projectile.list[i].draw();
+    }
+  }, 40);
 
-  // let drawMap = (ctx) => {
-  //   let player = Player.list[selfId];
-  //   let x = WIDTH / 2 - player.x;
-  //   let y = HEIGHT / 2 - player.y;
-  //   ctx.drawImage(Img.map[player.map], x, y);
-  // };
+  let drawMap = (ctx) => {
+    let player = Player.list[selfId];
+    let x = WIDTH / 2 - player.x;
+    let y = HEIGHT / 2 - player.y;
+    ctx.drawImage(Img.map[player.map], x, y);
+  };
 
-  // let drawLevel = (ctxUi) => {
-  //   if (lastLevel === Player.list[selfId].level) {
-  //     return;
-  //   }
-  //   lastLevel = Player.list[selfId].level;
-  //   ctxUi.clearRect(0, 0, 500, 500);
-  //   ctxUi.fillStyle = 'black';
-  //   ctxUi.fillText(Player.list[selfId].level, 0, 30);
-  // };
-  // let lastLevel = null;
+  let drawLevel = (ctxUi) => {
+    if (lastLevel === Player.list[selfId].level) {
+      return;
+    }
+    lastLevel = Player.list[selfId].level;
+    ctxUi.clearRect(0, 0, 500, 500);
+    ctxUi.fillStyle = 'black';
+    ctxUi.fillText(Player.list[selfId].level, 0, 30);
+  };
+  let lastLevel = null;
 
   document.onkeydown = (event) => {
     if (event.key === 'd') {
