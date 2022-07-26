@@ -65,7 +65,7 @@ Entity.getFrameUpdateData = () => {
 Player = (param) => {
   let self = Entity(param);
   self.number = '' + Math.floor(10 * Math.random());
-  self.userName = '';
+  self.displayName = '';
   self.pressingRight = false;
   self.pressingLeft = false;
   self.pressingUp = false;
@@ -149,13 +149,13 @@ Player = (param) => {
 
 Player.list = {};
 
-Player.onConnect = (socket, userName) => {
+Player.onConnect = (socket, displayName) => {
   let map = 'tundra';
   if (Math.random() < 0.5) {
     map = 'palace';
   }
   let player = Player({
-    userName: userName,
+    displayName: displayName,
     id: socket.id,
     map: map,
     socket: socket,
@@ -186,38 +186,31 @@ Player.onConnect = (socket, userName) => {
   // Data below is simply the message being sent to global chat.
   socket.on('sendMsgToServer', (data) => {
     for (let i in SOCKET_LIST) {
-      SOCKET_LIST[i].emit('addToChat', player.userName + ': ' + data);
+      SOCKET_LIST[i].emit('addToChat', player.displayName + ': ' + data);
     }
-    // socket.on('evalServer', (data) => {
-    //   if (!DEBUG) {
-    //     return;
-    //   }
-    //   const result = eval(data);
-    //   socket.emit('evalAnswer', result);
-    // });
   });
   console.log('socket connection');
   // Data below is going to be {userName, message}.
   socket.on('sendPmToServer', (data) => {
     let recipientSocket = null;
     for (let i in Player.list) {
-      if (Player.list[i].userName === data.userName) {
+      if (Player.list[i].displayName === data.displayName) {
         recipientSocket = SOCKET_LIST[i];
       } else if (recipientSocket === null) {
         recipientSocket.emit(
           'addToChat',
-          'The player ' + data.userName + ' is not online or does not exist.'
+          'The player ' + data.displayName + ' is not online or does not exist.'
         );
       } else {
         recipientSocket.emit(
           'addToChat',
-          'From ' + data.userName + ': ' + data.message
+          'From ' + data.displayName + ': ' + data.message
         );
-        socket.emit('addToChat', 'To ' + data.userName + ': ' + data.message);
+        socket.emit('addToChat', 'To ' + data.displayName + ': ' + data.message);
       }
     }
     for (let i in SOCKET_LIST) {
-      SOCKET_LIST[i].emit('addToChat', data.userName + ': ' + data);
+      SOCKET_LIST[i].emit('addToChat', data.displayName + ': ' + data);
     }
   });
 
@@ -237,6 +230,7 @@ Player.getAllInitPack = () => {
 };
 
 Player.onDisconnect = (socket) => {
+  console.log('On disconnect activated');
   delete Player.list[socket.id];
   removePack.player.push(socket.id);
 };

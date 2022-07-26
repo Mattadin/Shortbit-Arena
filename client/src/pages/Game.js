@@ -13,9 +13,9 @@ import { useQuery } from '@apollo/client';
 
 import { Inventory, Item } from '../Inventory';
 
-import { io } from 'https://cdn.socket.io/4.4.1/socket.io.esm.min.js';
+// import { io } from 'https://cdn.socket.io/4.4.1/socket.io.esm.min.js';
 
-const Game = () => {
+const Game = ({socket}) => {
   const WIDTH = 500;
   const HEIGHT = 500;
   // chat/canvas stuff
@@ -24,7 +24,7 @@ const Game = () => {
   // const chatForm = useRef();
   const canvasRef = useRef(null);
   const uiRef = useRef(null);
-  const socket = io();
+  // const socket = io();
   const changeMap = ()=>{
     socket.emit('changeMap');
 };
@@ -271,6 +271,7 @@ const Game = () => {
     };
   }
   console.log('useEffect in motion');
+  socket.emit('clientReady');
   return ()=> {
     console.log('useEffect cleanup in process');
     document.onmousedown = null;
@@ -279,7 +280,7 @@ const Game = () => {
     document.onkeyup = null;
     document.onkeydown = null;
   }
-  }, []);
+  }, [socket]);
 
   // document.oncontextmenu = (event) => {
   //   event.preventDefault();

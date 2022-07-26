@@ -40,7 +40,7 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-function App() {
+function App({socket}) {
   return (
     <ApolloProvider client={client}>
       <Router>
@@ -52,7 +52,7 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
               <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/game" element={<Game />} />
+              <Route path="/game" element={<Game socket={socket} />} />
             </Routes>
           </div>
           <Footer />

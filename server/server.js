@@ -55,25 +55,32 @@ io.sockets.on('connection', (socket) => {
   socket.id = Math.random();
   SOCKET_LIST[socket.id] = socket;
 
+  // socket.on('signIn', (data) => {
+  //   isValidPassword(data, (res) => {
+  //     if (res) {
+  //       Player.onConnect(socket, data.username);
+  //       socket.emit('signInResponse', { success: true });
+  //     } else {
+  //       socket.emit('signInResponse', { success: false });
+  //     }
+  //   });
+  // });
+  socket.on('clientReady', ()=>{
+    Player.onConnect(socket);
+    // every frame update the game state and empty arrays to avoid duplication
+    setInterval(() => {
+      const packs = Entity.getFrameUpdateData();
+      for (let i in SOCKET_LIST) {
+        let socket = SOCKET_LIST[i];
+        socket.emit('init', packs.initPack);
+        socket.emit('update', packs.updatePack);
+        socket.emit('remove', packs.removePack);
+      }
+    }, 40);
+  })
   socket.on('disconnect', () => {
-    delete SOCKET_LIST[socket.id];
-    Player.onDisconnect(socket);
-  });
-
-  Player.onConnect(socket);
-  socket.on('disconnect', () => {
+    console.log('On disconnect activated');
     delete SOCKET_LIST[socket.id];
     Player.onDisconnect(socket);
   });
 });
-
-// every frame update the game state and empty arrays to avoid duplication
-setInterval(() => {
-  const packs = Entity.getFrameUpdateData();
-  for (let i in SOCKET_LIST) {
-    let socket = SOCKET_LIST[i];
-    socket.emit('init', packs.initPack);
-    socket.emit('update', packs.updatePack);
-    socket.emit('remove', packs.removePack);
-  }
-}, 40);
