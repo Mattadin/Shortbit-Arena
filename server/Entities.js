@@ -2,7 +2,6 @@ const { Inventory } = require('../client/src/Inventory');
 
 let initPack = { player: [], projectile: [] };
 let removePack = { player: [], projectile: [] };
-/* eslint-disable no-undef */
 Entity = (param) => {
   let self = {
     x: 250,

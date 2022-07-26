@@ -18,32 +18,20 @@ import { io } from 'https://cdn.socket.io/4.4.1/socket.io.esm.min.js';
 const Game = () => {
   const WIDTH = 500;
   const HEIGHT = 500;
-  const socket = io();
-
-  // Img.map['palace'] = new Image();
-  // Img.map['palace'].src = { PALACE };
-
   // chat/canvas stuff
-  const chatText = useRef();
-  const chatInput = useRef();
-  const chatForm = useRef();
+  // const chatText = useRef();
+  // const chatInput = useRef();
+  // const chatForm = useRef();
   const canvasRef = useRef(null);
   const uiRef = useRef(null);
-  // ctxUi.font = '30px Arial';
-
-  // const [image, setImage] = useState(null);
-
-  // useEffect(() => {
-  //   const img = new Image();
-  //   img.src = TUNDRA;
-
-  //   img.onload = () => setImage(img);
-  // }, []);
+  const socket = io();
 
   useEffect(() => {
     // console.log('Rendering image');
     const ctx = canvasRef.current.getContext('2d');
-    if (canvasRef.current) {
+    const ctxUi = uiRef.current.getContext('2d');
+    if (canvasRef.current && uiRef.current) {
+      ctxUi.font = '10px Arial';
       const Img = {};
       Img.player = new Image();
       Img.player.src = PENGUIN;
@@ -79,6 +67,12 @@ const Game = () => {
       //   socket.emit('changeMap');
       // };
 
+      let inventory = new Inventory(socket, false);
+      socket.on('updateInventory', (items) => {
+        inventory.items = items;
+        inventory.refreshRender();
+      });
+
       // game stuff
 
       // init
@@ -101,15 +95,16 @@ const Game = () => {
             if (Player.list[selfId].map !== self.map) {
               return;
             }
-            let x = self.x - Player.list[selfId].x + WIDTH / 2;
-            let y = self.y - Player.list[selfId].y + HEIGHT / 2;
+            let x = self.x - Player.list[selfId].x + WIDTH/2;
+            let y = self.y - Player.list[selfId].y + HEIGHT/2;
 
-            let width = Img.player.width / 16;
-            let height = Img.player.height / 16;
+            let width = Img.player.width /16;
+            let height = Img.player.height /16;
 
             let hpWidth = (30 * self.hp) / self.hpMax;
             ctx.fillStyle = 'red';
-            ctx.fillRect(x - hpWidth / 2, y - 40, hpWidth, 4);
+            ctx.fillRect(x - hpWidth/2, y - 40, hpWidth, 4);
+
             // setting parameters for how to use the player images to render our user's sprites
 
             ctx.drawImage(
@@ -118,8 +113,8 @@ const Game = () => {
               0,
               Img.player.width,
               Img.player.height,
-              x - width / 2,
-              y - height / 2,
+              x-width/2,
+              y-height/2,
               width,
               height
             );
@@ -145,11 +140,11 @@ const Game = () => {
             if (Player.list[selfId].map !== self.map) {
               return;
             }
-            let width = Img.projectile.width / 8;
-            let height = Img.projectile.height / 8;
+            let width = Img.projectile.width/8;
+            let height = Img.projectile.height/8;
 
-            let x = self.x - Player.list[selfId].x + WIDTH / 2;
-            let y = self.y - Player.list[selfId].y + HEIGHT / 2;
+            let x = self.x - Player.list[selfId].x + WIDTH/2;
+            let y = self.y - Player.list[selfId].y + HEIGHT/2;
 
             ctx.drawImage(
               Img.projectile,
@@ -157,8 +152,8 @@ const Game = () => {
               0,
               Img.projectile.width,
               Img.projectile.height,
-              x - width / 2,
-              y - height / 2,
+              x-width/2,
+              y-height/2,
               width,
               height
             );
@@ -248,7 +243,7 @@ const Game = () => {
         }
         ctx.clearRect(0, 0, 500, 500);
         drawMap();
-        // drawLevel();
+        drawLevel();
         for (let i in Player.list) {
           Player.list[i].draw();
         }
@@ -259,22 +254,23 @@ const Game = () => {
 
       let drawMap = () => {
         let player = Player.list[selfId];
-        let x = WIDTH / 2 - player.x;
-        let y = HEIGHT / 2 - player.y;
+        let x = WIDTH/2 - player.x;
+        let y = HEIGHT/2 - player.y;
         ctx.drawImage(Img.map[player.map], x, y);
       };
 
-      // let drawLevel = () => {
-      //   if (lastLevel === Player.list[selfId].level) {
-      //     return;
-      //   }
-      //   lastLevel = Player.list[selfId].level;
-      //   ctxUi.fillStyle = 'black';
-      //   ctxUi.fillText(Player.list[selfId].level, 0, 30);
-      // };
-      // let lastLevel = null;
+      let drawLevel = () => {
+        if (lastLevel === Player.list[selfId].level) {
+          return;
+        }
+        lastLevel = Player.list[selfId].level;
+        ctxUi.clearRect(0, 0, 500, 500);
+        ctxUi.fillStyle = 'black';
+        ctxUi.fillText(Player.list[selfId].level, 0, 30);
+      };
+      let lastLevel = null;
     }
-  }, [canvasRef]);
+  }, [canvasRef, uiRef]);
 
   document.onkeydown = (event) => {
     if (event.key === 'd') {
@@ -316,7 +312,7 @@ const Game = () => {
     let x = -250 + event.clientX - 8;
     let y = -250 + event.clientY - 8;
     // find the angle by extracting the y and the x using atan2
-    let angle = (Math.atan2(y, x) / Math.PI) * 180;
+    let angle = Math.atan2(y, x) / Math.PI * 180;
     socket.emit('keyPress', { inputId: 'mouseAngle', state: angle });
   };
 
@@ -330,8 +326,16 @@ const Game = () => {
         id="game"
         // style="position: absolute; top: 8px; left: 8px; width:500px; height:500px"
       >
-        <canvas ref={canvasRef}></canvas>
-        {/* <canvas ref={uiRef}></canvas> */}
+        <canvas
+          id="gameCanvas"
+          ref={canvasRef}
+          style={{ height: HEIGHT, width: WIDTH }}
+        ></canvas>
+        <canvas
+          id="uiCanvas"
+          ref={uiRef}
+          style={{ height: HEIGHT, width: WIDTH }}
+        ></canvas>
 
         <div id="ui">
           <button>Change Map</button>
@@ -339,13 +343,13 @@ const Game = () => {
       </div>
 
       <div id="belowGame">
-        <div ref={chatText}>
+        <div>
           <div>Welcome to the game!</div>
         </div>
         <div id="inventory"></div>
 
-        <form ref={chatForm}>
-          <input ref={chatText} type="text"></input>
+        <form>
+          <input type="text"></input>
         </form>
       </div>
     </div>
