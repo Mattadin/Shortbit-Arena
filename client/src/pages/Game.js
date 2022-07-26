@@ -1,5 +1,5 @@
 /* eslint-disable*/
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import TUNDRA from '../img/map.png';
 import PALACE from '../img/map2.png';
 import SNOWBALL from '../img/snowball.png';
@@ -13,7 +13,7 @@ import { useQuery } from '@apollo/client';
 
 import { Inventory, Item } from '../Inventory';
 
-import { io } from 'socket.io-client';
+import { io } from 'https://cdn.socket.io/4.4.1/socket.io.esm.min.js';
 
 const Game = () => {
   const WIDTH = 500;
@@ -77,8 +77,8 @@ const Game = () => {
             if(Player.list[selfId].map !== self.map) {
                 return;
             }
-            let x= self.x - Player.list[selfId].x + WIDTH/2;
-            let y = self.y - Player.list[selfId].y + HEIGHT /2;
+            let x= self.x - Player.list[selfId].x + 250;
+            let y = self.y - Player.list[selfId].y + 250;
 
             let width = Img.player.width/16;
             let height = Img.player.height/16;
@@ -116,8 +116,8 @@ const Game = () => {
             let width = Img.projectile.width/8;
             let height = Img.projectile.height/8;
 
-            let x= self.x - Player.list[selfId].x + WIDTH/2;
-            let y = self.y - Player.list[selfId].y + HEIGHT /2;
+            let x= self.x - Player.list[selfId].x + 250;
+            let y = self.y - Player.list[selfId].y + 250;
 
             ctx.drawImage(Img.projectile,
             0, 0, Img.projectile.width, Img.projectile.height, x-width/2, y-height/2, width, height);
@@ -218,8 +218,8 @@ const Game = () => {
 
     let drawMap = ()=> {
         let player = Player.list[selfId];
-        let x = WIDTH/2 - player.x;
-        let y = HEIGHT/2 - player.y;
+        let x = 250 - player.x;
+        let y = 250 - player.y;
         ctx.drawImage(Img.map[player.map], x, y);
     }
 
@@ -228,12 +228,13 @@ const Game = () => {
             return;
         }
         lastLevel = Player.list[selfId].level;
+        ctxUi.clearRect( 0, 0, 500, 500);
         ctxUi.fillStyle = 'black';
         ctxUi.fillText(Player.list[selfId].level,0,30);
     }
     let lastLevel = null;
     }
-  }, [canvasRef, uiRef]);
+  }, []);
 
   document.onkeydown = (event) => {
     if (event.key === 'd') {
