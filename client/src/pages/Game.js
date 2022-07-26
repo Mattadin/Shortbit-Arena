@@ -28,9 +28,9 @@ const Game = () => {
 
   useEffect(() => {
     // console.log('Rendering image');
-    const ctx = canvasRef.current.getContext('2d');
-    const ctxUi = uiRef.current.getContext('2d');
     if (canvasRef.current && uiRef.current) {
+      const ctx = canvasRef.current.getContext('2d');
+      const ctxUi = uiRef.current.getContext('2d');
       ctxUi.font = '10px Arial';
       const Img = {};
       Img.player = new Image();
@@ -42,25 +42,7 @@ const Game = () => {
       Img.map['tundra'].src = TUNDRA;
       Img.map['palace'] = new Image();
       Img.map['palace'].src = PALACE;
-
-      // socket.on('addToChat', (data) => {
-      //   chatText.innerHTML += '<div>' + data + '</div>';
-      // });
-
-      // socket.on('evalAnswer', (data) => {
-      //   console.log(data);
-      // });
-
-      // chatForm.onsubmit = (e) => {
-      //   e.preventDefault();
-      //   if (chatInput.value[0] === '/') {
-      //     socket.emit('evalServer', chatInput.values.slice(1));
-      //   } else {
-      //     socket.emit('sendMsgToServer', chatInput.value);
-      //   }
-      //   chatInput.value = '';
-      // };
-
+      
       class Player {
         constructor(initPack) {
         let self = {};
@@ -233,91 +215,86 @@ const Game = () => {
         ctxUi.fillText(Player.list[selfId].level,0,30);
     }
     let lastLevel = null;
-    }
+
+    document.onkeydown = (event) => {
+      if (event.key === 'd') {
+        // console.log('pushing d');
+        socket.emit('keyPress', { inputId: 'right', state: true });
+      } else if (event.key === 's') {
+        // console.log('pushing s');
+        socket.emit('keyPress', { inputId: 'down', state: true });
+      } else if (event.key === 'a') {
+        // console.log('pushing a');
+        socket.emit('keyPress', { inputId: 'left', state: true });
+      } else if (event.key === 'w') {
+        // console.log('pushing w');
+        socket.emit('keyPress', { inputId: 'up', state: true });
+      }
+    };
+  
+    document.onkeyup = (event) => {
+      if (event.key === 'd') {
+        socket.emit('keyPress', { inputId: 'right', state: false });
+      } else if (event.key === 's') {
+        socket.emit('keyPress', { inputId: 'down', state: false });
+      } else if (event.key === 'a') {
+        socket.emit('keyPress', { inputId: 'left', state: false });
+      } else if (event.key === 'w') {
+        socket.emit('keyPress', { inputId: 'up', state: false });
+      }
+    };
+  
+    document.onmousedown = (event) => {
+      // console.log('pushing attack');
+      socket.emit('keyPress', { inputId: 'attack', state: true });
+    };
+    document.onmouseup = (event) => {
+      socket.emit('keyPress', { inputId: 'attack', state: false });
+    };
+    document.onmousemove = (event) => {
+      // find relative to center of the canvas
+      let x = -250 + event.clientX - 8;
+      let y = -250 + event.clientY - 8;
+      // find the angle by extracting the y and the x using atan2
+      let angle = Math.atan2(y, x) / Math.PI * 180;
+      socket.emit('keyPress', { inputId: 'mouseAngle', state: angle });
+    };
+  }
+  console.log('useEffect in motion');
+  return ()=> {
+    console.log('useEffect cleanup in process');
+  }
   }, []);
-
-  document.onkeydown = (event) => {
-    if (event.key === 'd') {
-      // console.log('pushing d');
-      socket.emit('keyPress', { inputId: 'right', state: true });
-    } else if (event.key === 's') {
-      // console.log('pushing s');
-      socket.emit('keyPress', { inputId: 'down', state: true });
-    } else if (event.key === 'a') {
-      // console.log('pushing a');
-      socket.emit('keyPress', { inputId: 'left', state: true });
-    } else if (event.key === 'w') {
-      // console.log('pushing w');
-      socket.emit('keyPress', { inputId: 'up', state: true });
-    }
-  };
-
-  document.onkeyup = (event) => {
-    if (event.key === 'd') {
-      socket.emit('keyPress', { inputId: 'right', state: false });
-    } else if (event.key === 's') {
-      socket.emit('keyPress', { inputId: 'down', state: false });
-    } else if (event.key === 'a') {
-      socket.emit('keyPress', { inputId: 'left', state: false });
-    } else if (event.key === 'w') {
-      socket.emit('keyPress', { inputId: 'up', state: false });
-    }
-  };
-
-  document.onmousedown = (event) => {
-    // console.log('pushing attack');
-    socket.emit('keyPress', { inputId: 'attack', state: true });
-  };
-  document.onmouseup = (event) => {
-    socket.emit('keyPress', { inputId: 'attack', state: false });
-  };
-  document.onmousemove = (event) => {
-    // find relative to center of the canvas
-    let x = -250 + event.clientX - 8;
-    let y = -250 + event.clientY - 8;
-    // find the angle by extracting the y and the x using atan2
-    let angle = Math.atan2(y, x) / Math.PI * 180;
-    socket.emit('keyPress', { inputId: 'mouseAngle', state: angle });
-  };
 
   // document.oncontextmenu = (event) => {
   //   event.preventDefault();
   // };
-
-  return (
+  console.log('rendering- react leave me alone');
+  return useMemo(()=>(
     <div id="gameDiv">
       <div
         id="game"
         // style="position: absolute; top: 8px; left: 8px; width:500px; height:500px"
+        style={{position: "absolute", top: "8px", left: "8px", width: "500px", height: "500px"}}
       >
         <canvas
           id="gameCanvas"
           ref={canvasRef}
-          style={{ height: HEIGHT, width: WIDTH }}
+          width= "500"
+          height= "500"
+          // width="500" height="500" style="position: absolute;border:1px solid #000000;"
+          style={{ position: "absolute", border: "1px solid #000000" }}
         ></canvas>
         <canvas
           id="uiCanvas"
           ref={uiRef}
-          style={{ height: HEIGHT, width: WIDTH }}
+          width= "500"
+          height= "500"
+          style={{ position: "absolute", border: "1px solid #000000" }}
         ></canvas>
-
-        <div id="ui">
-          <button>Change Map</button>
-        </div>
-      </div>
-
-      <div id="belowGame">
-        <div>
-          <div>Welcome to the game!</div>
-        </div>
-        <div id="inventory"></div>
-
-        <form>
-          <input type="text"></input>
-        </form>
       </div>
     </div>
-  );
+  ), []);
 };
 
 export default Game;

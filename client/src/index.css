@@ -162,13 +162,11 @@ img {
     width: 100%;
     object-fit: cover;
 }
-#game {
+/* #game {
     position: absolute;
     background-color: white;
     top: 8px;
     left: 8px;
-    width: 500px;
-    height: 500px;
 }
 
 #gameCanvas {
@@ -179,7 +177,7 @@ img {
 #uiCanvas {
     position: absolute;
     border: 1px solid black;
-}
+} */
 
 
 /* Tablet media queries */
