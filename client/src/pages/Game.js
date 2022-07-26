@@ -4,8 +4,8 @@ import TUNDRA from '../img/map.png';
 import PALACE from '../img/map2.png';
 import SNOWBALL from '../img/snowball.png';
 import PENGUIN from '../img/penguin.png';
-import Player from '../classes/Player';
-import Projectile from '../classes/Projectile';
+// import Player from '../classes/Player';
+// import Projectile from '../classes/Projectile';
 
 // Import the `useParams()` hook
 import { useParams } from 'react-router-dom';
@@ -25,13 +25,16 @@ const Game = () => {
   const canvasRef = useRef(null);
   const uiRef = useRef(null);
   const socket = io();
+  const changeMap = ()=>{
+    socket.emit('changeMap');
+};
 
   useEffect(() => {
     // console.log('Rendering image');
     if (canvasRef.current && uiRef.current) {
       const ctx = canvasRef.current.getContext('2d');
       const ctxUi = uiRef.current.getContext('2d');
-      ctxUi.font = '10px Arial';
+      ctxUi.font = '30px Arial';
       const Img = {};
       Img.player = new Image();
       Img.player.src = PENGUIN;
@@ -43,6 +46,13 @@ const Game = () => {
       Img.map['palace'] = new Image();
       Img.map['palace'].src = PALACE;
       
+
+      let inventory = new Inventory(socket, false);
+      socket.on('updateInventory', (items) => {
+        inventory.items = items;
+        inventory.refreshRender();
+      });
+
       class Player {
         constructor(initPack) {
         let self = {};
@@ -263,6 +273,11 @@ const Game = () => {
   console.log('useEffect in motion');
   return ()=> {
     console.log('useEffect cleanup in process');
+    document.onmousedown = null;
+    document.onmousemove = null;
+    document.onmouseup = null;
+    document.onkeyup = null;
+    document.onkeydown = null;
   }
   }, []);
 
@@ -292,6 +307,12 @@ const Game = () => {
           height= "500"
           style={{ position: "absolute", border: "1px solid #000000" }}
         ></canvas>
+
+        <div id="ui" style={{position: "absolute", width: "500px", height: "500px"}}>
+          <button onClick={changeMap} style={{position: "absolute", bottom: "-20px", left: "0px"}}>
+            Change Map
+          </button>
+        </div>
       </div>
     </div>
   ), []);
