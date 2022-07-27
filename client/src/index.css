@@ -162,23 +162,21 @@ img {
     width: 100%;
     object-fit: cover;
 }
-/* #game {
-    position: absolute;
-    background-color: white;
-    top: 8px;
-    left: 8px;
+
+#gameDiv {
+    display: flex;
 }
 
-#gameCanvas {
-    position: absolute;
-    border: 1px solid black;
+#ui {
+    display: flex;
+    position: relative;
+    margin-top: 450px;
+    margin-left: 200px;
 }
 
-#uiCanvas {
-    position: absolute;
-    border: 1px solid black;
-} */
-
+#chat {
+    margin-left: 35%;
+}
 
 /* Tablet media queries */
 

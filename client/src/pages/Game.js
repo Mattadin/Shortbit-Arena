@@ -1,9 +1,10 @@
 /* eslint-disable*/
 import React, { useState, useRef, useEffect, useMemo } from 'react';
 import TUNDRA from '../img/map.png';
-import PALACE from '../img/map2.png';
+import PALACE from '../img/map3.png';
 import SNOWBALL from '../img/snowball.png';
 import PENGUIN from '../img/penguin.png';
+import Chat from '../components/Chat/Chat'
 // import Player from '../classes/Player';
 // import Projectile from '../classes/Projectile';
 
@@ -13,21 +14,13 @@ import { useQuery } from '@apollo/client';
 
 import { Inventory, Item } from '../Inventory';
 
-// import { io } from 'https://cdn.socket.io/4.4.1/socket.io.esm.min.js';
-
 const Game = ({socket}) => {
-  const WIDTH = 500;
-  const HEIGHT = 500;
-  // chat/canvas stuff
-  // const chatText = useRef();
-  // const chatInput = useRef();
-  // const chatForm = useRef();
+  //canvas stuff
   const canvasRef = useRef(null);
   const uiRef = useRef(null);
-  // const socket = io();
   const changeMap = ()=>{
     socket.emit('changeMap');
-};
+  };
 
   useEffect(() => {
     // console.log('Rendering image');
@@ -263,8 +256,8 @@ const Game = ({socket}) => {
     };
     document.onmousemove = (event) => {
       // find relative to center of the canvas
-      let x = -250 + event.clientX - 8;
-      let y = -250 + event.clientY - 8;
+      let x = -250 + event.clientX - 200;
+      let y = -250 + event.clientY - 100;
       // find the angle by extracting the y and the x using atan2
       let angle = Math.atan2(y, x) / Math.PI * 180;
       socket.emit('keyPress', { inputId: 'mouseAngle', state: angle });
@@ -282,38 +275,37 @@ const Game = ({socket}) => {
   }
   }, [socket]);
 
-  // document.oncontextmenu = (event) => {
-  //   event.preventDefault();
-  // };
+  let displayName = "testing";
+
   console.log('rendering- react leave me alone');
   return useMemo(()=>(
     <div id="gameDiv">
       <div
         id="game"
-        // style="position: absolute; top: 8px; left: 8px; width:500px; height:500px"
-        style={{position: "absolute", top: "8px", left: "8px", width: "500px", height: "500px"}}
-      >
+        style={{position: "absolute", top: "100px", left: "200px", width: "500px", height: "500px"}}>
         <canvas
           id="gameCanvas"
           ref={canvasRef}
           width= "500"
           height= "500"
-          // width="500" height="500" style="position: absolute;border:1px solid #000000;"
-          style={{ position: "absolute", border: "1px solid #000000" }}
-        ></canvas>
+          style={{ position: "absolute", border: "1px solid #000000" }}></canvas>
         <canvas
           id="uiCanvas"
           ref={uiRef}
           width= "500"
           height= "500"
-          style={{ position: "absolute", border: "1px solid #000000" }}
-        ></canvas>
+          style={{ position: "absolute", border: "1px solid #000000" }}></canvas>
+      </div>
 
-        <div id="ui" style={{position: "absolute", width: "500px", height: "500px"}}>
-          <button onClick={changeMap} style={{position: "absolute", bottom: "-20px", left: "0px"}}>
-            Change Map
-          </button>
-        </div>
+      <div id="ui">
+        <button onClick={changeMap} style={{ bottom: "-20px", left: "0px"}}>
+          Change Map
+        </button>
+      </div>
+
+      <div id= "chat">
+        <p> VIVA LA REVOLUCION!</p>
+        <Chat socket={socket} displayName={displayName}/>
       </div>
     </div>
   ), []);

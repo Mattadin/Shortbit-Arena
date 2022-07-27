@@ -77,6 +77,11 @@ io.sockets.on('connection', (socket) => {
         socket.emit('remove', packs.removePack);
       }
     }, 40);
+  });
+
+  socket.on('sendMessage', (data)=> {
+    console.log('the chat message is: ', data);
+    socket.emit('receiveMessage', data);
   })
   socket.on('disconnect', () => {
     console.log('On disconnect activated');
