@@ -1,5 +1,3 @@
-const { Inventory } = require('../client/src/Inventory');
-
 let initPack = { player: [], projectile: [] };
 let removePack = { player: [], projectile: [] };
 Entity = (param) => {
@@ -76,7 +74,7 @@ Player = (param) => {
   self.hp = 100;
   self.hpMax = 100;
   self.level = 0;
-  self.inventory = new Inventory(param.socket, true);
+  self.ultimate = 0;
 
   let super_update = self.update;
   self.update = () => {
@@ -88,9 +86,7 @@ Player = (param) => {
     }
   };
   self.shootProjectile = (angle) => {
-    if (Math.random() < 0.0001) {
-      self.inventory.addItem('cuppa', 1);
-    }
+
     Projectile({
       shooter: self.id,
       angle: angle,
@@ -126,6 +122,7 @@ Player = (param) => {
       hp: self.hp,
       hpMax: self.hpMax,
       level: self.level,
+      ultimate: self.ultimate,
       map: self.map,
     };
   };
@@ -137,6 +134,7 @@ Player = (param) => {
       y: self.y,
       hp: self.hp,
       level: self.level,
+      ultimate: self.ultimate,
       map: self.map,
     };
   };
@@ -183,7 +181,14 @@ Player.onConnect = (socket, displayName) => {
       player.map = 'tundra';
     }
   });
-  
+
+    // for tomorrow
+  // socket.on('useUltimate', (player)=> {
+  //   player.shootProjectile(angle);
+  //   console.log('server side angle is: ', angle);
+  //   console.log('server side player is: ', player);
+  // });
+
   // Private messaging for future development
   // socket.on('sendPmToServer', (data) => {
   //   let recipientSocket = null;
@@ -267,6 +272,7 @@ Projectile = (param) => {
           let shooter = Player.list[self.shooter];
           if (shooter) {
             shooter.level += 1;
+            shooter.ultimate +=1;
           }
           p.hp = p.hpMax;
           p.x = Math.random() * 500;

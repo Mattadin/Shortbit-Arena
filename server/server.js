@@ -7,7 +7,6 @@ const { typeDefs, resolvers } = require('./schemas');
 const db = require('./config/connection');
 const io = require('socket.io')(server, {});
 const { Entity, Player, Projectile } = require('./Entities');
-const { Inventory, Item } = require('../client/src/Inventory');
 const { authMiddleware } = require('./utils/auth');
 const apolServer = new ApolloServer({
   typeDefs,

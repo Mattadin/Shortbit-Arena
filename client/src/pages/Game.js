@@ -4,6 +4,8 @@ import TUNDRA from '../img/map.png';
 import PALACE from '../img/map3.png';
 import SNOWBALL from '../img/snowball.png';
 import PENGUIN from '../img/penguin.png';
+import POLARBEAR from '../img/polar-bear.png';
+import SEAL from '../img/seal.png'
 import Chat from '../components/Chat/Chat'
 import Auth from '../utils/auth'
 // import Player from '../classes/Player';
@@ -13,9 +15,7 @@ import Auth from '../utils/auth'
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 
-import { Inventory, Item } from '../Inventory';
-
-const Game = ({socket}) => {
+const Game = ({socket}, {userChoice}) => {
   //canvas stuff
   const canvasRef = useRef(null);
   const uiRef = useRef(null);
@@ -32,7 +32,7 @@ const Game = ({socket}) => {
       ctxUi.font = '30px Arial';
       const Img = {};
       Img.player = new Image();
-      Img.player.src = PENGUIN;
+      Img.player.src = {userChoice};
       Img.projectile = new Image();
       Img.projectile.src = SNOWBALL;
       Img.map = {};
@@ -40,13 +40,7 @@ const Game = ({socket}) => {
       Img.map['tundra'].src = TUNDRA;
       Img.map['palace'] = new Image();
       Img.map['palace'].src = PALACE;
-      
 
-      let inventory = new Inventory(socket, false);
-      socket.on('updateInventory', (items) => {
-        inventory.items = items;
-        inventory.refreshRender();
-      });
 
       class Player {
         constructor(initPack) {
@@ -59,6 +53,7 @@ const Game = ({socket}) => {
         self.hp = initPack.hp;
         self.hpMax = initPack.hpMax;
         self.level = initPack.level;
+        self.ultimate = initPack.ultimate;
         self.map = initPack.map;
          // draws our characters, their hp bars and their levels.
         self.draw = ()=> {
@@ -158,6 +153,9 @@ const Game = ({socket}) => {
                 if(pack.map !== undefined) {
                     p.map = pack.map;
                 }
+                if(pack.ultimate !== undefined) {
+                  p.ultimate = pack.ultimate;
+                }
             }
         }
         for (let i = 0; i < data.projectile.length; i++) {
@@ -221,6 +219,7 @@ const Game = ({socket}) => {
         ctxUi.fillStyle = 'black';
         ctxUi.fillText(Player.list[selfId].level,0,30);
     }
+
     let lastLevel = null;
 
     document.onkeydown = (event) => {
@@ -250,6 +249,13 @@ const Game = ({socket}) => {
         socket.emit('keyPress', { inputId: 'up', state: false });
       }
     };
+
+    // document.onkeydown = (event) => {
+    //   if (event.key === 'q') {
+    //     socket.emit('useUltimate', Player.list[selfId]);
+    //     console.log(Player.list[selfId]);
+    //   }
+    // }
   
     document.onmousedown = (event) => {
       // console.log('pushing attack');
@@ -281,6 +287,11 @@ const Game = ({socket}) => {
 
   // console.log(displayName);
 
+  const useUltimate = () => {
+    socket.emit('useUltimate', Player.list[selfId]);
+    console.log('Player.list[selfId] is: ', Player.list[selfId])
+  }
+
   console.log('rendering- react leave me alone');
   return useMemo(()=>(
     <div id="gameDiv">
@@ -305,6 +316,7 @@ const Game = ({socket}) => {
         <button onClick={changeMap} style={{ bottom: "-20px", left: "0px"}}>
           Change Map
         </button>
+        {/* <button onClick={useUltimate}>Ultimate</button> */}
       </div>
 
       <div id= "chat">

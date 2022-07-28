@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   ApolloClient,
   InMemoryCache,
@@ -7,7 +7,6 @@ import {
 } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-
 import Home from './pages/Home';
 import Signup from './pages/Signup';
 import Login from './pages/Login';
@@ -41,6 +40,9 @@ const client = new ApolloClient({
 });
 
 function App({socket}) {
+
+  const [userChoice, setUserChoice] = useState(null);
+
   return (
     <ApolloProvider client={client}>
       <Router>
@@ -51,8 +53,8 @@ function App({socket}) {
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/game" element={<Game socket={socket} />} />
+              <Route path="/dashboard" element={<Dashboard setUserChoice={setUserChoice}/>} />
+              <Route path="/game" element={<Game socket={socket} userChoice={userChoice} />} />
             </Routes>
           </div>
           <Footer />

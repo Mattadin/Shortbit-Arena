@@ -2,11 +2,18 @@ import React from 'react';
 import { Navigate, Link, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { QUERY_ME, QUERY_USER } from '../utils/queries';
+import PENGUIN from '../img/penguin.png';
+import POLARBEAR from '../img/polar-bear.png';
+import SEAL from '../img/seal.png'
 
 import Auth from '../utils/auth';
 
-const Dashboard = () => {
+const Dashboard = ({setUserChoice}) => {
   const { email: userParam } = useParams();
+
+  const onChoice = (choice) => {
+    setUserChoice(choice);
+  }
 
   const { loading, data } = useQuery(userParam ? QUERY_USER : QUERY_ME, {
     variables: { email: userParam },
@@ -39,9 +46,12 @@ const Dashboard = () => {
             Enter Game!
           </Link>
         </p>
+        <button onClick={onChoice(PENGUIN)}>CHESTER</button>
+        <button onClick={onChoice(POLARBEAR)}>PERCIVAL</button>
+        <button onClick={onChoice(SEAL)}>SYLVESTER</button>
       </div>
     </main>
   );
 };
 
-export default Dashboard;
+export default Dashboard();

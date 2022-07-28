@@ -178,6 +178,10 @@ img {
     display: flex;
 }
 
+#gameCanvas {
+    background-color: grey;
+}
+
 #ui {
     display: flex;
     position: relative;
