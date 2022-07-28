@@ -17,13 +17,9 @@ const resolvers = {
       }
       throw new AuthenticationError('You need to be logged in!');
     },
-    // thoughts: async (parent, { username }) => {
-    //   const params = username ? { username } : {};
-    //   return Thought.find(params).sort({ createdAt: -1 });
-    // },
-    // thought: async (parent, { thoughtId }) => {
-    //   return Thought.findOne({ _id: thoughtId });
-    // },
+    // averages: async () => {
+    //   // create aggregate here
+    // }
   },
 
   Mutation: {
@@ -54,6 +50,12 @@ const resolvers = {
 
       return { token, user };
     },
+    // addLevel: async (parent, args) => {
+    //   // fill data here
+    // },
+    // addDefeat: async (parent, args) => {
+    //   // fill data here
+    // }
   },
 };
 

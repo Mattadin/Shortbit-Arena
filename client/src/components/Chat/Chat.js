@@ -12,19 +12,13 @@ function Chat({socket, displayName}) {
       };
 
       await socket.emit('sendMessage', messageData);
-      setmessageList((list) => [...list, messageData]);
+      setCurrentMessage("");
     }
   };
 
-  const handleChatSubmit = async (event)=> {
-    event.preventDefault();
-    await sendMessage();
-    event.target.reset();   
-  }
-
   useEffect(()=> {
     socket.on('receiveMessage', (data) => {
-      console.log(data);
+      // console.log('receiveMessage data is: ', data);
       setmessageList((list) => [...list, data]);
     })
   }, [socket])
@@ -36,14 +30,16 @@ function Chat({socket, displayName}) {
           return <div>{messageContent.displayName}: "{messageContent.message}"</div>
         })}
       </div>
-      <form id="chatForm" onSubmit={handleChatSubmit}>
           <input
           type="text"
+          value={currentMessage}
           placeholder="Add chat here!"
           onChange={(event)=> {
             setCurrentMessage(event.target.value);
+          }}
+          onKeyPress={(event) => {
+            event.key === "Enter" && sendMessage();
           }} />
-      </form>
     </div>
   )
 }

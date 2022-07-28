@@ -163,6 +163,17 @@ img {
     object-fit: cover;
 }
 
+#heroImage {
+    background-image: url('./img/polarpalacebg.png');
+    background-repeat: no-repeat;
+    background-position:center;
+    background-size: cover;
+    background-position: center center;
+    background-attachment: fixed;
+    height: 100vh;
+    width: 100vw;
+}
+
 #gameDiv {
     display: flex;
 }

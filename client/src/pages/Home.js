@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 const Home = () => {
   return (
-    <main className="container">
+    <main id= "heroImage" className="container">
       <div className="enter__container">
         <p>
           <Link className="enter__card" to="/login">

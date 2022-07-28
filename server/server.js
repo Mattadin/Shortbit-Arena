@@ -55,16 +55,6 @@ io.sockets.on('connection', (socket) => {
   socket.id = Math.random();
   SOCKET_LIST[socket.id] = socket;
 
-  // socket.on('signIn', (data) => {
-  //   isValidPassword(data, (res) => {
-  //     if (res) {
-  //       Player.onConnect(socket, data.username);
-  //       socket.emit('signInResponse', { success: true });
-  //     } else {
-  //       socket.emit('signInResponse', { success: false });
-  //     }
-  //   });
-  // });
   socket.on('clientReady', ()=>{
     Player.onConnect(socket);
     // every frame update the game state and empty arrays to avoid duplication
@@ -80,9 +70,12 @@ io.sockets.on('connection', (socket) => {
   });
 
   socket.on('sendMessage', (data)=> {
-    console.log('the chat message is: ', data);
-    socket.emit('receiveMessage', data);
-  })
+    for (let i in SOCKET_LIST) {
+      // console.log('the sendMessage data is: ', data);
+      SOCKET_LIST[i].emit('receiveMessage', data);
+    }
+  });
+
   socket.on('disconnect', () => {
     console.log('On disconnect activated');
     delete SOCKET_LIST[socket.id];

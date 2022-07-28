@@ -275,7 +275,7 @@ const Game = ({socket}) => {
   }
   }, [socket]);
 
-  let displayName = "testing";
+  let displayName = socket.id;
 
   console.log('rendering- react leave me alone');
   return useMemo(()=>(
@@ -305,7 +305,7 @@ const Game = ({socket}) => {
 
       <div id= "chat">
         <p> VIVA LA REVOLUCION!</p>
-        <Chat socket={socket} displayName={displayName}/>
+        <Chat socket={ socket } displayName={ displayName }/>
       </div>
     </div>
   ), []);
