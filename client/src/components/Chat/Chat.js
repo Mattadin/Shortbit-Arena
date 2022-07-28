@@ -1,19 +1,20 @@
 import React, { useState, useEffect }from 'react'
 
 function Chat({socket, displayName}) {
-  const [currentMessage, setCurrentMessage] = useState("");
+  const [ currentMessage, setCurrentMessage ] = useState("");
   const [ messageList,  setmessageList] = useState([]);
 
   const sendMessage = async () => {
-    if(currentMessage[0] === '@') {
-      // Chat syntax: @displayName, message
-      const messageData = {
-        displayName: currentMessage.slice(1, currentMessage.indexOf(',')),
-        message: currentMessage.slice(currentMessage.indexOf(',') + 1)
-      }
-      await socket.emit('sendPmToServer', messageData)
-      setCurrentMessage("");
-    }
+    // Private messaging for future development
+    // if(currentMessage[0] === '@') {
+    //   // Chat syntax: @displayName, message
+    //   const messageData = {
+    //     displayName: currentMessage.slice(1, currentMessage.indexOf(',')),
+    //     message: currentMessage.slice(currentMessage.indexOf(',') + 1)
+    //   }
+    //   await socket.emit('sendPmToServer', messageData)
+    //   setCurrentMessage("");
+    // }
     if(currentMessage !== "") {
       const messageData = {
         displayName: displayName,

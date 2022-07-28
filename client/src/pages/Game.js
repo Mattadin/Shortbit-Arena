@@ -22,6 +22,7 @@ const Game = ({socket}) => {
   const changeMap = ()=>{
     socket.emit('changeMap');
   };
+  let displayName = Auth.getProfile().data.displayName;
 
   useEffect(() => {
     // console.log('Rendering image');
@@ -52,6 +53,7 @@ const Game = ({socket}) => {
         let self = {};
         self.id = initPack.id;
         self.number = initPack.number;
+        self.displayName = displayName;
         self.x = initPack.x;
         self.y = initPack.y;
         self.hp = initPack.hp;
@@ -196,6 +198,7 @@ const Game = ({socket}) => {
         drawLevel();
         for(let i in Player.list) {
             Player.list[i].draw();
+            // console.log('Hope this works, expecting <insertUserDisplayName>: ', Player.list[i].displayName)
         }
         for(let i in Projectile.list) {
             Projectile.list[i].draw();
@@ -276,7 +279,6 @@ const Game = ({socket}) => {
   }
   }, [socket]);
 
-  let displayName = Auth.getProfile().data.displayName;
   // console.log(displayName);
 
   console.log('rendering- react leave me alone');

@@ -183,36 +183,30 @@ Player.onConnect = (socket, displayName) => {
       player.map = 'tundra';
     }
   });
-  // Data below is simply the message being sent to global chat.
-  socket.on('sendMsgToServer', (data) => {
-    for (let i in SOCKET_LIST) {
-      SOCKET_LIST[i].emit('addToChat', player.displayName + ': ' + data);
-    }
-  });
-  console.log('socket connection');
-  // Data below is going to be {userName, message}.
-  socket.on('sendPmToServer', (data) => {
-    let recipientSocket = null;
-    for (let i in Player.list) {
-      if (Player.list[i].displayName === data.displayName) {
-        recipientSocket = SOCKET_LIST[i];
-      } else if (recipientSocket === null) {
-        recipientSocket.emit(
-          'addToChat',
-          'The player ' + data.displayName + ' is not online or does not exist.'
-        );
-      } else {
-        recipientSocket.emit(
-          'addToChat',
-          'From ' + data.displayName + ': ' + data.message
-        );
-        socket.emit('addToChat', 'To ' + data.displayName + ': ' + data.message);
-      }
-    }
-    for (let i in SOCKET_LIST) {
-      SOCKET_LIST[i].emit('addToChat', data.displayName + ': ' + data);
-    }
-  });
+  
+  // Private messaging for future development
+  // socket.on('sendPmToServer', (data) => {
+  //   let recipientSocket = null;
+  //   for (let i in Player.list) {
+  //     if (Player.list[i].displayName === data.displayName) {
+  //     recipientSocket = SOCKET_LIST[i];
+  //     } else if (recipientSocket === null) {
+  //       recipientSocket.emit(
+  //         'receiveMessage',
+  //         data
+  //       );
+  //     } else {
+  //       recipientSocket.emit(
+  //         'receiveMessage',
+  //         data
+  //       );
+  //       socket.emit('receiveMessage', data);
+  //     }
+  //   }
+  //   for (let i in SOCKET_LIST) {
+  //     SOCKET_LIST[i].emit('receiveMessage', data);
+  //   }
+  // });
 
   socket.emit('init', {
     selfId: socket.id,
@@ -230,7 +224,6 @@ Player.getAllInitPack = () => {
 };
 
 Player.onDisconnect = (socket) => {
-  console.log('On disconnect activated');
   delete Player.list[socket.id];
   removePack.player.push(socket.id);
 };
