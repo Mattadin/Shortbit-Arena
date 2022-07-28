@@ -5,12 +5,20 @@ function Chat({socket, displayName}) {
   const [ messageList,  setmessageList] = useState([]);
 
   const sendMessage = async () => {
-    if (currentMessage !== "") {
+    if(currentMessage[0] === '@') {
+      // Chat syntax: @displayName, message
+      const messageData = {
+        displayName: currentMessage.slice(1, currentMessage.indexOf(',')),
+        message: currentMessage.slice(currentMessage.indexOf(',') + 1)
+      }
+      await socket.emit('sendPmToServer', messageData)
+      setCurrentMessage("");
+    }
+    if(currentMessage !== "") {
       const messageData = {
         displayName: displayName,
         message: currentMessage,
-      };
-
+      }
       await socket.emit('sendMessage', messageData);
       setCurrentMessage("");
     }

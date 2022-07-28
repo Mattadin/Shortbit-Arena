@@ -5,6 +5,7 @@ import PALACE from '../img/map3.png';
 import SNOWBALL from '../img/snowball.png';
 import PENGUIN from '../img/penguin.png';
 import Chat from '../components/Chat/Chat'
+import Auth from '../utils/auth'
 // import Player from '../classes/Player';
 // import Projectile from '../classes/Projectile';
 
@@ -275,7 +276,8 @@ const Game = ({socket}) => {
   }
   }, [socket]);
 
-  let displayName = socket.id;
+  let displayName = Auth.getProfile().data.displayName;
+  // console.log(displayName);
 
   console.log('rendering- react leave me alone');
   return useMemo(()=>(
