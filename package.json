@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "develop": "concurrently \"cd server && npm run watch\" \"cd client && npm start\"",
-    "start": "nodemon server.js",
+    "start": "server.js",
     "build": "build",
     "seed": "node seeds/index.js",
     "install": "cd server && npm i && cd ../client && npm i"
