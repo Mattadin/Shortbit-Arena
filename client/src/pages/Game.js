@@ -1,5 +1,5 @@
 /* eslint-disable*/
-import React, { useState, useRef, useEffect, useMemo } from 'react';
+import React, { useState, useRef, useEffect, useMemo, useContext } from 'react';
 import TUNDRA from '../img/map.png';
 import PALACE from '../img/map3.png';
 import SNOWBALL from '../img/snowball.png';
@@ -10,12 +10,13 @@ import Chat from '../components/Chat/Chat'
 import Auth from '../utils/auth'
 // import Player from '../classes/Player';
 // import Projectile from '../classes/Projectile';
+import { ChoiceContext } from '../utils/Context';
 
 // Import the `useParams()` hook
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 
-const Game = ({socket}, {userChoice}) => {
+const Game = ({socket}) => {
   //canvas stuff
   const canvasRef = useRef(null);
   const uiRef = useRef(null);
@@ -24,15 +25,22 @@ const Game = ({socket}, {userChoice}) => {
   };
   let displayName = Auth.getProfile().data.displayName;
 
+  const { userChoice, setUserChoice } = useContext(ChoiceContext);
+
   useEffect(() => {
     // console.log('Rendering image');
     if (canvasRef.current && uiRef.current) {
       const ctx = canvasRef.current.getContext('2d');
       const ctxUi = uiRef.current.getContext('2d');
       ctxUi.font = '30px Arial';
-      const Img = {};
-      Img.player = new Image();
-      Img.player.src = {userChoice};
+      const Img= {};
+      Img.player = {};
+      Img.player['penguin'] = new Image();
+      Img.player['penguin'].src = PENGUIN;
+      Img.player['polarBear'] = new Image();
+      Img.player['polarBear'].src = POLARBEAR;
+      Img.player['seal'] = new Image();
+      Img.player['seal'].src = SEAL;
       Img.projectile = new Image();
       Img.projectile.src = SNOWBALL;
       Img.map = {};
@@ -63,16 +71,16 @@ const Game = ({socket}, {userChoice}) => {
             let x= self.x - Player.list[selfId].x + 250;
             let y = self.y - Player.list[selfId].y + 250;
 
-            let width = Img.player.width/16;
-            let height = Img.player.height/16;
+            let width = Img.player[userChoice].width/16;
+            let height = Img.player[userChoice].height/16;
 
             let hpWidth = 30 * self.hp / self.hpMax;
             ctx.fillStyle = 'red';
             ctx.fillRect(x - hpWidth/2, y - 40, hpWidth, 4);
             // setting parameters for how to use the player images to render our user's sprites
 
-            ctx.drawImage(Img.player,
-            0, 0, Img.player.width, Img.player.height,
+            ctx.drawImage(Img.player[userChoice],
+            0, 0, Img.player[userChoice].width, Img.player[userChoice].height,
             x-width/2, y-height/2, width, height);
         }
         Player.list[self.id] = self;
@@ -273,6 +281,7 @@ const Game = ({socket}, {userChoice}) => {
       socket.emit('keyPress', { inputId: 'mouseAngle', state: angle });
     };
   }
+  console.log('User chose: ', userChoice);
   console.log('useEffect in motion');
   socket.emit('clientReady');
   return ()=> {

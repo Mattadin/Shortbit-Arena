@@ -14,6 +14,7 @@ import Dashboard from './pages/Dashboard';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Game from './pages/Game';
+import { ChoiceContext } from './utils/Context';
 
 // Construct our main GraphQL API endpoint
 const httpLink = createHttpLink({
@@ -41,25 +42,27 @@ const client = new ApolloClient({
 
 function App({socket}) {
 
-  const [userChoice, setUserChoice] = useState(null);
+  const [userChoice, setUserChoice] = useState("penguin");
 
   return (
     <ApolloProvider client={client}>
-      <Router>
-        <div className="">
-          <Header />
+      <ChoiceContext.Provider value={{userChoice, setUserChoice}}>
+        <Router>
           <div className="">
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/signup" element={<Signup />} />
-              <Route path="/dashboard" element={<Dashboard setUserChoice={setUserChoice}/>} />
-              <Route path="/game" element={<Game socket={socket} userChoice={userChoice} />} />
-            </Routes>
+            <Header />
+            <div className="">
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/signup" element={<Signup />} />
+                <Route path="/dashboard" element={<Dashboard/>} />
+                <Route path="/game" element={<Game socket={socket} />} />
+              </Routes>
+            </div>
+            <Footer />
           </div>
-          <Footer />
-        </div>
-      </Router>
+        </Router>
+      </ChoiceContext.Provider>
     </ApolloProvider>
   );
 }

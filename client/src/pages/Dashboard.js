@@ -1,26 +1,41 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Navigate, Link, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { QUERY_ME, QUERY_USER } from '../utils/queries';
-import PENGUIN from '../img/penguin.png';
-import POLARBEAR from '../img/polar-bear.png';
-import SEAL from '../img/seal.png'
+
+import { ChoiceContext } from '../utils/Context';
 
 import Auth from '../utils/auth';
 
-const Dashboard = ({setUserChoice}) => {
+const Dashboard = () => {
   const { email: userParam } = useParams();
 
-  const onChoice = (choice) => {
-    setUserChoice(choice);
-  }
+  const { userChoice, setUserChoice } = useContext(ChoiceContext);
 
   const { loading, data } = useQuery(userParam ? QUERY_USER : QUERY_ME, {
     variables: { email: userParam },
   });
 
+  const selectChester= async (event) => {
+    event.preventDefault();
+    setUserChoice("penguin");
+    console.log(userChoice);
+  }
+
+  const selectPercival= async (event) => {
+    event.preventDefault();
+    setUserChoice("polarBear");
+    console.log(userChoice);
+  }
+
+  const selectSylvester= async (event) => {
+    event.preventDefault();
+    setUserChoice("seal");
+    console.log(userChoice);
+  }
+
   console.log(data);
-  console.log(userParam);
+  console.log(userChoice);
 
   const user = data?.me || data?.user || {};
   if (Auth.loggedIn() && Auth.getProfile().data.email === userParam) {
@@ -46,12 +61,14 @@ const Dashboard = ({setUserChoice}) => {
             Enter Game!
           </Link>
         </p>
-        <button onClick={onChoice(PENGUIN)}>CHESTER</button>
-        <button onClick={onChoice(POLARBEAR)}>PERCIVAL</button>
-        <button onClick={onChoice(SEAL)}>SYLVESTER</button>
+      </div>
+      <div className= "enter__game">
+        <button type="submit" onClick={selectChester}>Chester</button>
+        <button type="submit" onClick={selectPercival}>Percival</button>
+        <button type="submit" onClick={selectSylvester}>Sylvester</button>
       </div>
     </main>
   );
 };
 
-export default Dashboard();
+export default Dashboard;

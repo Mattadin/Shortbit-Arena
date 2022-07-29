@@ -75,6 +75,7 @@ Player = (param) => {
   self.hpMax = 100;
   self.level = 0;
   self.ultimate = 0;
+  self.img = '';
 
   let super_update = self.update;
   self.update = () => {
@@ -124,6 +125,7 @@ Player = (param) => {
       level: self.level,
       ultimate: self.ultimate,
       map: self.map,
+      img: self.img,
     };
   };
 
