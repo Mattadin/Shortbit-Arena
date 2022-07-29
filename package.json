@@ -2,12 +2,12 @@
   "name": "polar-palace",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "server/server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "develop": "concurrently \"cd server && npm run watch\" \"cd client && npm start\"",
-    "start": "server.js",
-    "build": "build",
+    "start": "node server/server.js",
+    "build": "cd client && npm run build",
     "seed": "node seeds/index.js",
     "install": "cd server && npm i && cd ../client && npm i"
   },
