@@ -65,7 +65,7 @@ io.sockets.on('connection', (socket) => {
         socket.emit('update', packs.updatePack);
         socket.emit('remove', packs.removePack);
       }
-    }, 40);
+    }, 80);
   });
 
   socket.on('sendMessage', (data)=> {

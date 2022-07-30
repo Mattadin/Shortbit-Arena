@@ -59,23 +59,30 @@ const Dashboard = () => {
   return (
     <main className="container">
       <div className="enter__game">
-        <p>
-          <Link className="enter__card" to="/game">
-            Enter Game!
-          </Link>
-        </p>
       </div>
       <div className= "enter__game">
         <h1>SELECT YOUR ALLEGIANCE</h1>
         <div className="choice__container">
+          <button className="choice__button" type="submit" onClick={selectChester}>
+          <Link to="/game">
           <img className="dash__img" src={PENGUIN} alt="Cutest penguin you've ever seen"></img>
-          <button className="choice__button" type="submit" onClick={selectChester}>Penguin Clan</button>
+            Penguin Clan
+          </Link>
+          </button>
       
+          <button className="choice__button" type="submit" onClick={selectPercival}>
+          <Link to="/game">
           <img className="dash__img" src={POLARBEAR} alt="Cutest polar bear you've ever seen"></img>
-          <button className="choice__button" type="submit" onClick={selectPercival}>Polar bear Tribe</button>
+            Polar bear Tribe
+          </Link>
+          </button>
 
+          <button className="choice__button" type="submit" onClick={selectSylvester}>
+          <Link to="/game">
           <img className="dash__img" src={SEAL} alt="Cutest seal you've ever seen"></img>
-          <button className="choice__button" type="submit" onClick={selectSylvester}>Seal Society</button>
+            Seal Society
+          </Link>
+          </button>
         </div>
       </div>
     </main>

@@ -189,7 +189,7 @@ img {
 
 .dash__img {
     display: block;
-    width: 15%;
+    width: 100%;
     object-fit: cover;
 }
 

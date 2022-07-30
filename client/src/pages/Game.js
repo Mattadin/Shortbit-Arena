@@ -209,7 +209,7 @@ const Game = ({socket}) => {
         for(let i in Projectile.list) {
             Projectile.list[i].draw();
         }
-    }, 40);
+    }, 80);
 
     let drawMap = ()=> {
         let player = Player.list[selfId];
