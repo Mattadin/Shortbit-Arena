@@ -2,6 +2,9 @@ import React, { useContext } from 'react';
 import { Navigate, Link, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { QUERY_ME, QUERY_USER } from '../utils/queries';
+import PENGUIN from '../img/penguin.png';
+import POLARBEAR from '../img/polar-bear.png';
+import SEAL from '../img/seal.png'
 
 import { ChoiceContext } from '../utils/Context';
 
@@ -63,9 +66,17 @@ const Dashboard = () => {
         </p>
       </div>
       <div className= "enter__game">
-        <button type="submit" onClick={selectChester}>Chester</button>
-        <button type="submit" onClick={selectPercival}>Percival</button>
-        <button type="submit" onClick={selectSylvester}>Sylvester</button>
+        <h1>SELECT YOUR ALLEGIANCE</h1>
+        <div className="choice__container">
+          <img className="dash__img" src={PENGUIN} alt="Cutest penguin you've ever seen"></img>
+          <button className="choice__button" type="submit" onClick={selectChester}>Penguin Clan</button>
+      
+          <img className="dash__img" src={POLARBEAR} alt="Cutest polar bear you've ever seen"></img>
+          <button className="choice__button" type="submit" onClick={selectPercival}>Polar bear Tribe</button>
+
+          <img className="dash__img" src={SEAL} alt="Cutest seal you've ever seen"></img>
+          <button className="choice__button" type="submit" onClick={selectSylvester}>Seal Society</button>
+        </div>
       </div>
     </main>
   );

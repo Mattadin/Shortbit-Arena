@@ -322,7 +322,7 @@ const Game = ({socket}) => {
       </div>
 
       <div id="ui">
-        <button onClick={changeMap} style={{ bottom: "-20px", left: "0px"}}>
+        <button className="map__btn" onClick={changeMap} style={{ bottom: "-20px", left: "0px"}}>
           Change Map
         </button>
         {/* <button onClick={useUltimate}>Ultimate</button> */}

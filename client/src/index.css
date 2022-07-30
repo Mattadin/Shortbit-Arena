@@ -28,7 +28,7 @@
     /* Container sizing for responsiveness */
     --container-width-lg: 75%;
     --container-width-md: 86%;
-    --container-width-sm: 90%;
+    --container-width-sm: 86%;
 }
 
 /* Make navigating the website silky smooth */
@@ -102,6 +102,7 @@ a:hover {
 
 .enter__container {
     position: relative;
+    margin: 3rem;
     left: 35vw;
     top: 35vh;
 }
@@ -110,6 +111,7 @@ a:hover {
     background: var(--color-bg-variant);
     border: 1px solid transparent;
     border-radius: 1rem;
+    margin: 10rem;
     padding: 2rem;
     text-align: center;
     color: var(--color-primary);
@@ -155,12 +157,57 @@ a:hover {
 
 .enter__game {
     text-align: center;
+    margin: 3rem 1rem;
+}
+
+.choice__container {
+    display: flex;
+}
+
+.choice__button {
+    background: var(--color-bg-variant);
+    border: 1px solid transparent;
+    border-radius: 1rem;
+    margin: 2rem;
+    padding: 2rem;
+    text-align: center;
+    color: var(--color-primary)
+}
+
+.choice__button:hover {
+    background: transparent;
+    border-color: var(--color-primary-variant);
+    transition: var(--transition);
+    cursor: pointer;
 }
 
 img {
     display: block;
     width: 100%;
     object-fit: cover;
+}
+
+.dash__img {
+    display: block;
+    width: 15%;
+    object-fit: cover;
+}
+
+.map__btn {
+    background: var(--color-bg-variant);
+    border: 1px solid transparent;
+    border-radius: 1rem;
+    margin: 2rem;
+    padding: 2rem;
+    text-align: center;
+    color: var(--color-primary)
+}
+
+.map__btn:hover {
+    background: transparent;
+    border-color: var(--color-primary-variant);
+    transition: var(--transition);
+    cursor: pointer;
 }
 
 #heroImage {
@@ -200,6 +247,32 @@ img {
         width: var(--container-width-md);
     }
 
+    .enter__card {
+        background: var(--color-bg-variant);
+        border: 1px solid transparent;
+        border-radius: 1rem;
+        margin: 5rem;
+        padding: 2rem;
+        text-align: center;
+        color: var(--color-primary);
+    }
+
+    .choice__container {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .dash__img {
+        display: block;
+        width: 75%;
+        object-fit: cover;
+    }
+
+    #chat {
+        margin: 0 40%;
+    }
+    
+
 }
 
 /* Small device media queries */
@@ -212,15 +285,26 @@ img {
         position: relative;
         width: var(--container-width-sm);
         left: 0;
-        top: 0;
+        top: 50vh;
       }
       
-      .enter__card {
+    .enter__card {
         background: var(--color-bg-variant);
         border: 1px solid transparent;
         border-radius: 1rem;
+        margin: 5rem 2rem;
         padding: 1rem;
         text-align: center;
         color: var(--color-primary);
-      }
+    }
+
+    .choice__container {
+        display: block;
+    }
+
+    .dash__img {
+        display: block;
+        width: 100%;
+        object-fit: cover;
+    }
 }
