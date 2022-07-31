@@ -5,6 +5,9 @@ import { QUERY_ME, QUERY_USER } from '../utils/queries';
 import PENGUIN from '../img/penguin.png';
 import POLARBEAR from '../img/polar-bear.png';
 import SEAL from '../img/seal.png'
+import MOVEMENT from '../img/instructionsMovement.PNG';
+import ATTACK from '../img/instructionsAttack.PNG';
+import LEVEL from '../img/instructionsLevel.PNG';
 
 import { ChoiceContext } from '../utils/Context';
 
@@ -59,6 +62,32 @@ const Dashboard = () => {
   return (
     <main className="container">
       <div className="enter__game">
+        <h1>HOW TO PLAY:</h1>
+
+        <h2 className="instruction__title">
+          To move, simply use the WASD keys with your left hand.
+          They control cardinal directions as shown below:
+        </h2>
+        <div className="flex__box">
+          <img className="instruction__image" src={MOVEMENT} alt="Adorable penguin demonstrating movement." />
+        </div>
+
+        <h2 className="instruction__title">
+          To throw your snowballs, simply click for controlled bursts
+          or hold down the left click button for a steady stream.
+        </h2>
+        <div className="flex__box">
+          <img className="instruction__image" src={ATTACK} alt="Adorable polar bear demonstrating attack commands" />
+        </div>
+
+        <h2 className="instruction__title">
+          Each enemy you defeat will increase your level, demonstrating your
+          experience in snowball fights! Climb to the top and become a veteran
+          of the snowball revolution!
+        </h2>
+        <div className="flex__box">
+          <img className="instruction__image" src={LEVEL} alt="Adorable seal demonstrating where level is tracked" />
+        </div>
       </div>
       <div className= "enter__game">
         <h1>SELECT YOUR ALLEGIANCE</h1>

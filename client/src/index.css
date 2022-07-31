@@ -160,6 +160,11 @@ a:hover {
     margin: 3rem 1rem;
 }
 
+.flex__box {
+    display: flex;
+    justify-content: center;
+}
+
 .choice__container {
     display: flex;
 }
@@ -167,7 +172,7 @@ a:hover {
 .choice__button {
     background: var(--color-bg-variant);
     border: 1px solid transparent;
-    border-radius: 1rem;
+    border-radius: 3rem;
     margin: 2rem;
     padding: 2rem;
     text-align: center;
@@ -184,6 +189,12 @@ a:hover {
 img {
     display: block;
     width: 100%;
+    object-fit: cover;
+}
+
+.instruction__image {
+    margin: 2rem;
+    width: 25%;
     object-fit: cover;
 }
 
@@ -304,6 +315,12 @@ img {
 
     .dash__img {
         display: block;
+        width: 100%;
+        object-fit: cover;
+    }
+
+    .instruction__image {
+        margin: 2rem;
         width: 100%;
         object-fit: cover;
     }

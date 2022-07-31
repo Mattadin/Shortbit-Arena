@@ -33,6 +33,8 @@ app.get('/', (req, res) => {
 app.get('/*', (req, res) => {
   res.sendFile(path.join(__dirname, '../client/build/index.html'));
 });
+
+
 const startApolloServer = async (typeDefs, resolvers) => {
   await apolServer.start();
   apolServer.applyMiddleware({ app });
