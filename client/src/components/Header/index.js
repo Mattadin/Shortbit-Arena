@@ -29,6 +29,9 @@ const Header = () => {
               <Link className="cta__card" to="/signup">
                 Signup
               </Link>
+              <Link className="cta__card" to="/docs">
+                Docs
+              </Link>
             </>
           )}
         </div>

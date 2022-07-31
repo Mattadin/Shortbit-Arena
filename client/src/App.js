@@ -14,6 +14,8 @@ import Dashboard from './pages/Dashboard';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Game from './pages/Game';
+import Docs from './pages/Docs';
+
 import { ChoiceContext } from './utils/Context';
 
 // Construct our main GraphQL API endpoint
@@ -57,6 +59,7 @@ function App({socket}) {
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/dashboard" element={<Dashboard/>} />
                 <Route path="/game" element={<Game socket={socket} />} />
+                <Route path="/docs" element={<Docs/>} />
               </Routes>
             </div>
             <Footer />
