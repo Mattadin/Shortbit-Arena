@@ -18,7 +18,7 @@ const Docs = () => {
                 <p><a href="#login">Login system</a></p>
                 <p><a href="#game">Game system</a></p>
                 <br></br>
-                <p><a href="">In-depth technical documentation</a></p>
+                <p><a href="https://github.com/Mattadin/polar-palace/blob/main/TechnicalDocs.md">In-depth technical documentation</a></p>
             </div>
 
             <div className="enter__game">
@@ -269,7 +269,7 @@ const Docs = () => {
                 </p>
                 <a href="#toc">Back to top</a>
                 <br></br>
-                <a href=""> Technical Documentation for Polar Palace</a>
+                <a href="https://github.com/Mattadin/polar-palace/blob/main/TechnicalDocs.md"> Technical Documentation for Polar Palace</a>
             </div>
         </main>
     );
