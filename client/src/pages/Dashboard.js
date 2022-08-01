@@ -2,9 +2,9 @@ import React, { useContext } from 'react';
 import { Navigate, Link, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { QUERY_ME, QUERY_USER } from '../utils/queries';
-import PENGUIN from '../img/penguin.png';
-import POLARBEAR from '../img/polar-bear.png';
-import SEAL from '../img/seal.png'
+import PENGUIN from '../img/penguin1k.png';
+import POLARBEAR from '../img/bear1k.png';
+import SEAL from '../img/seal1k.png'
 import MOVEMENT from '../img/instructionsMovement.PNG';
 import ATTACK from '../img/instructionsAttack.PNG';
 import LEVEL from '../img/instructionsLevel.PNG';

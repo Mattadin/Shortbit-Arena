@@ -3,9 +3,9 @@ import React, { useState, useRef, useEffect, useMemo, useContext } from 'react';
 import TUNDRA from '../img/map.png';
 import PALACE from '../img/map3.png';
 import SNOWBALL from '../img/snowball.png';
-import PENGUIN from '../img/penguin.png';
-import POLARBEAR from '../img/polar-bear.png';
-import SEAL from '../img/seal.png'
+import PENGUIN from '../img/penguin1k.png';
+import POLARBEAR from '../img/bear1k.png';
+import SEAL from '../img/seal1k.png'
 import Chat from '../components/Chat/Chat'
 import Auth from '../utils/auth'
 // import Player from '../classes/Player';
