@@ -55,6 +55,12 @@ body {
     margin: 0 auto;
 }
 
+.hero-container {
+    width: var(--container-width-lg);
+    margin: 0 auto;
+    overflow-y: hidden;
+}
+
 section {
     margin-top: 8rem;
 }
@@ -160,6 +166,13 @@ a:hover {
     margin: 3rem 1rem;
 }
 
+.docs__align {
+    text-align: left;
+    margin: 5rem 0rem;
+    max-width: 800px;
+    line-height: 1.75;
+}
+
 .flex__box {
     display: flex;
     justify-content: center;
@@ -224,9 +237,9 @@ img {
 #heroImage {
     background-image: url('./img/polarpalacebg.png');
     background-repeat: no-repeat;
-    background-position:center;
+    background-position: center;
     background-size: cover;
-    background-position: center center;
+    background-position: center;
     background-attachment: fixed;
     height: 100vh;
     width: 100vw;
@@ -292,6 +305,11 @@ img {
     .container {
         width: var(--container-width-sm)
     }
+
+    .hero-container {
+        width: var(--container-width-sm)
+    }
+
     .enter__container {
         position: relative;
         width: var(--container-width-sm);
@@ -303,7 +321,6 @@ img {
         background: var(--color-bg-variant);
         border: 1px solid transparent;
         border-radius: 1rem;
-        margin: 5rem 2rem;
         padding: 1rem;
         text-align: center;
         color: var(--color-primary);

@@ -1,15 +1,18 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import './header.css';
 import Auth from '../../utils/auth';
 
 const Header = () => {
+  const location = useLocation();
   const logout = (event) => {
     event.preventDefault();
     Auth.logout();
   };
   return (
     <header>
+      {location.pathname !== '/' && (
       <div className="header__container">
         <div>
           {Auth.loggedIn() ? (
@@ -24,7 +27,7 @@ const Header = () => {
                 Docs
               </Link>
             </>
-          ) : (
+          ) :  (
             <>
               <Link className="cta__card" to="/login">
                 Login
@@ -39,6 +42,7 @@ const Header = () => {
           )}
         </div>
       </div>
+      )}
     </header>
   );
 };

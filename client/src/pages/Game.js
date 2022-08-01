@@ -15,15 +15,37 @@ import { ChoiceContext } from '../utils/Context';
 // Import the `useParams()` hook
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
+import { QUERY_ME, QUERY_USER } from '../utils/queries';
 
 const Game = ({socket}) => {
+// Authentication
+  const { email: userParam } = useParams();
+
+  const { loading, data } = useQuery(userParam ? QUERY_USER : QUERY_ME, {
+    variables: { email: userParam },
+  });
+
+  const user = data?.me || data?.user || {};
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+  if (!user?.email) {
+    return (
+      <h4>
+        You need to be logged in to see this. Use the navigation links above to
+        sign up or log in!
+      </h4>
+    );
+  }
+
   //canvas stuff
   const canvasRef = useRef(null);
   const uiRef = useRef(null);
   const changeMap = ()=>{
     socket.emit('changeMap');
   };
-  
+
   let displayName = Auth.getProfile().data.displayName;
 
   const { userChoice, setUserChoice } = useContext(ChoiceContext);

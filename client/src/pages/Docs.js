@@ -1,4 +1,7 @@
 import React from 'react';
+import CANVASEX from '../img/canvas-example.PNG'
+import SOCKETEX from '../img/socket-example.PNG'
+import JWTEX from '../img/jwt-example.PNG'
 
 const Docs = () => {
 
@@ -6,6 +9,7 @@ const Docs = () => {
         <main className="container">
             <div id="toc" className="enter__game">
                 <h1> Overview Documentation for Polar Palace</h1>
+                <br></br>
                 <h2> Table of Contents: </h2>
                 <p> Technologies used </p>
                 <p><a href="#canvas">Canvas</a></p>
@@ -20,8 +24,8 @@ const Docs = () => {
                 <br></br>
                 <p><a href="https://github.com/Mattadin/polar-palace/blob/main/TechnicalDocs.md">In-depth technical documentation</a></p>
             </div>
-
-            <div className="enter__game">
+            <center>
+            <div className="docs__align">
                 <h2 id="canvas"> Canvas </h2>
                 <p>
                  Canvas API allows users to draw various graphics including shapes and images
@@ -33,6 +37,8 @@ const Docs = () => {
                  performance expectations for users. For Polar Palace, we've chosen to stick with 2d
                  as it is sufficient for the objective of the project.
                 </p>
+                <img src={CANVASEX} alt="example of canvas API being used in Polar Palace"/>
+                <br></br>
                 <p>Full documentation for Canvas API can be found <a
                 href="https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API"
                 rel="noreferrer"
@@ -42,7 +48,7 @@ const Docs = () => {
                 <a href="#toc">Back to top</a>
             </div>
 
-            <div className="enter__game">
+            <div className="docs__align">
                 <h2 id="socket"> Socket.io </h2>
                 <p>
                     Socket.Io is a unqiue tool that allows users to communicate information
@@ -66,6 +72,8 @@ const Docs = () => {
                     is the core component for many of the various functionalities seen in Polar Palace 
                     and it provides the "multiplayer" aspects brilliantly.
                 </p>
+                <img src={SOCKETEX} alt="example of socket.io functionality"/>
+                <br></br>
                 <p>Full documentation for Socket.Io can be found <a
                 href="https://socket.io/docs/v4/"
                 rel="noreferrer"
@@ -75,7 +83,7 @@ const Docs = () => {
                 <a href="#toc">Back to top</a>
             </div>
 
-            <div className="enter__game">
+            <div className="docs__align">
                 <h2 id="bcrypt"> Bcrypt </h2>
                 <p>
                     Bcrypt is a security API that allows developers to securely store confidential information 
@@ -90,6 +98,7 @@ const Docs = () => {
                     and passes either a "true" or "false" response to allow the application to know if the 
                     password does indeed match.
                 </p>
+                <br></br>
                 <p>Full documentation for Bcrypt can be found <a
                 href="https://openbase.com/js/bcrypt/documentation"
                 rel="noreferrer"
@@ -99,7 +108,7 @@ const Docs = () => {
                 <a href="#toc">Back to top</a>
             </div>
 
-            <div className="enter__game">
+            <div className="docs__align">
                 <h2 id="apollo"> Apollo </h2>
                 <p>
                     Apollo provides a structure for quickly and efficiently quering a database (essentially
@@ -125,6 +134,7 @@ const Docs = () => {
                     gives agency to the user to represent themselves with their chosen name, uniquely identifying 
                     the player as they wish.
                 </p>
+                <br></br>
                 <p>Full documentation for Apollo can be found <a
                 href="https://www.apollographql.com/docs/"
                 rel="noreferrer"
@@ -134,7 +144,7 @@ const Docs = () => {
                 <a href="#toc">Back to top</a>
             </div>
 
-            <div className="enter__game">
+            <div className="docs__align">
                 <h2 id="jwt"> JSON Web Token </h2>
                 <p>
                     JSON Web Token is a multifaceted product that allows an application's server to securely 
@@ -159,6 +169,8 @@ const Docs = () => {
                     from Apollo with the security protocols of JSON Web Token allows Polar Palace to quickly and 
                     effectively provide secure means for users to enjoy their favorite snow ball revolution game.
                 </p>
+                <img src={JWTEX} alt="example of JSON Web Token data"/>
+                <br></br>
                 <p>Full documentation for JSON Web Token can be found <a
                 href="https://jwt.io/introduction"
                 rel="noreferrer"
@@ -168,7 +180,7 @@ const Docs = () => {
                 <a href="#toc">Back to top</a>
             </div>
 
-            <div className="enter__game">
+            <div className="docs__align">
                 <h2 id="login"> Login System </h2>
                 <p>
                     The login system for Polar Palace is actually quite simple thanks to the assistance of 
@@ -206,7 +218,7 @@ const Docs = () => {
                 <a href="#toc">Back to top</a>
             </div>
 
-            <div className="enter__game">
+            <div className="docs__align">
                 <h2 id="game"> Game System </h2>
                 <p>
                     We've already discussed the technologies and the login system, lets get to the meat and 
@@ -271,6 +283,7 @@ const Docs = () => {
                 <br></br>
                 <a href="https://github.com/Mattadin/polar-palace/blob/main/TechnicalDocs.md"> Technical Documentation for Polar Palace</a>
             </div>
+            </center>
         </main>
     );
 };
