@@ -20,6 +20,9 @@ const Header = () => {
               <button className="logout__card" onClick={logout}>
                 Logout
               </button>
+              <Link className="cta__card" to="/docs">
+                Docs
+              </Link>
             </>
           ) : (
             <>

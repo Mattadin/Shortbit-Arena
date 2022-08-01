@@ -23,6 +23,7 @@ const Game = ({socket}) => {
   const changeMap = ()=>{
     socket.emit('changeMap');
   };
+  
   let displayName = Auth.getProfile().data.displayName;
 
   const { userChoice, setUserChoice } = useContext(ChoiceContext);
