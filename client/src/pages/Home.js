@@ -3,6 +3,7 @@ import { Navigate, Link, useParams } from 'react-router-dom';
 import Auth from '../utils/auth';
 import { useQuery } from '@apollo/client';
 import { QUERY_ME, QUERY_USER } from '../utils/queries';
+import ENTER from '../img/enterImage.png'
 
 const Home = () => {
   const { email: userParam } = useParams();
@@ -25,8 +26,8 @@ const Home = () => {
     <main id= "heroImage" className="hero-container">
       <div className="enter__container">
         <p>
-          <Link className="enter__card" to="/login">
-            Enter.
+          <Link to="/login">
+            <img id="enter__button" className="hero__center" src={ENTER} alt="Enter button" />
           </Link>
         </p>
       </div>

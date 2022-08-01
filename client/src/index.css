@@ -234,8 +234,17 @@ img {
     cursor: pointer;
 }
 
+.hero__center {
+    margin: 7rem 7rem;
+}
+
+.hero__center:hover {
+    margin: 7rem 7rem;
+    background-color: var(--color-bg);
+}
+
 #heroImage {
-    background-image: url('./img/polarpalacebg.png');
+    background-image: url('./img/herobg.jpg');
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
@@ -243,6 +252,10 @@ img {
     background-attachment: fixed;
     height: 100vh;
     width: 100vw;
+}
+
+#enter__button {
+    width: 10%;
 }
 
 #gameDiv {
@@ -295,6 +308,14 @@ img {
     #chat {
         margin: 0 40%;
     }
+
+    .hero__center {
+        margin: 0;
+    }
+
+    #enter__button {
+        width: 30%;
+    }
     
 
 }
@@ -340,5 +361,22 @@ img {
         margin: 2rem;
         width: 100%;
         object-fit: cover;
+    }
+
+    #heroImage {
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 414px 896px;
+        background-attachment: fixed;
+        height: 100vh;
+        width: 100vw;
+    }
+
+    .hero__center {
+        margin: 1rem 3rem;
+    }
+
+    #enter__button {
+        width: 50%;
     }
 }
