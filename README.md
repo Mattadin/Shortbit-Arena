@@ -27,10 +27,10 @@ Run the following commands in the command-line in the root of the folder
 4. The browser will open at http://localhost:3000/
 5. Sign Up for an account by entering an email, username, and password
 6. After signing up, you will automatically be logged in
-7. Once logged in, you may search for a book
-8. You have the ability to save books, which you can retrieve at the "See Your Books" tab
-9. You can search for books again using the "Search For Books" tab
-10. You may logout by hitting the "logout" button
+7. Once logged in, you will be taken to the dashboard
+8. From the dashboard you will be greeted with a simple tutorial and a choice of animal
+9. Within the game you will be able to interact with the world.
+10. The chat box is not map specific, it is a global chat box.
 
 ## Contributors
 To contribute to Polar Palace, clone this repo locally and commit your code on a separate branch.

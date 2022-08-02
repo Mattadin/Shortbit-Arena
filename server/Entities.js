@@ -184,7 +184,7 @@ Player.onConnect = (socket, displayName) => {
     }
   });
 
-    // for tomorrow
+    // Ultimate system for future development
   // socket.on('useUltimate', (player)=> {
   //   player.shootProjectile(angle);
   //   console.log('server side angle is: ', angle);
