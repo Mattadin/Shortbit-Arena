@@ -7,13 +7,13 @@ const Footer = () => {
   const navigate = useNavigate();
   return (
     <footer>
+      {location.pathname !== '/' && (
       <div className="footer__container">
-        {location.pathname !== '/' && (
           <button className="footer__button" onClick={() => navigate(-1)}>
             &larr; Go Back
           </button>
-        )}
       </div>
+      )}
     </footer>
   );
 };
