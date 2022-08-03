@@ -1,0 +1,15 @@
+.chatBody {
+    background-color: var(--color-bg);
+    color: var(--color-bg-primary);
+    overflow-y: scroll;
+    width: 500px;
+    height: 400px;
+}
+
+.displayName {
+    color: var(--color-primary);
+}
+
+.chatText {
+    color: var(--color-light);
+}

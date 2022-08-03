@@ -1,4 +1,5 @@
-import React, { useState, useEffect }from 'react'
+import React, { useState, useEffect, useRef }from 'react'
+import './chat.css';
 
 function Chat({socket, displayName}) {
   const [ currentMessage, setCurrentMessage ] = useState("");
@@ -25,6 +26,8 @@ function Chat({socket, displayName}) {
     }
   };
 
+  const chatRef = useRef(null)
+
   useEffect(()=> {
     socket.on('receiveMessage', (data) => {
       // console.log('receiveMessage data is: ', data);
@@ -32,12 +35,17 @@ function Chat({socket, displayName}) {
     })
   }, [socket])
 
+  useEffect(() => {
+    chatRef.current?.scrollIntoView({behavior: 'smooth'});
+  }, [messageList]);
+
   return (
     <div>
       <div className="chatBody">
         {messageList.map((messageContent) => {
-          return <div>{messageContent.displayName}: "{messageContent.message}"</div>
+          return <div><span className="displayName">{messageContent.displayName}</span>:<span className="chatText"> "{messageContent.message}"</span></div>
         })}
+        <div ref={chatRef} />
       </div>
           <input
           type="text"

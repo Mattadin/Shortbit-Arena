@@ -67,7 +67,7 @@ At the core, Canvas requires we interact with the DOM- however in react, this is
 
 As we discuss in depth the relationships and their importance, its important to begin with the Entity constructor. On initial inception, there was simply a "Player" and "Projectile" however I quickly discovered there were several shared traits between the two. This consideration lead to the creation of the "Entity" constructor which simply contains the shared traits between a Player and a Projectile. Param is passed as an argument for easy access to shared information as we delve deeper into how entity object data is passed between front and back end when we discuss the life cycle later in this discussion.
 
-*../server/Entities.js beginning from line 2*
+*../server/Entities.js beginning from line 3*
 
     Entity = (param) => {
     let self = {
@@ -151,7 +151,7 @@ The final important key of the Projectile is defining the person projecting it. 
 
 ## Recap
 
-With an initial understanding of the infrastructure for the game state in our back end, we can now begin a discussion about the total lifecycle in which the front end is inseparably part of. Due to the complex nature of the relationship between Socket.io and Canvas, it is important that the process tracking and drawing our Players and Projectiles happen in the front end and pass this information through "packets."
+With an initial understanding of the infrastructure for the game state in our back end, we can now begin a discussion about the total lifecycle in which the front end is inseparably part of. Due to the complex nature of the relationship between Socket.io and Canvas, it is important that the process of tracking and drawing our Players and Projectiles happen in the front end and pass this information through "packets."
 
 
 # The Game Lifecycle
@@ -184,7 +184,7 @@ This tells our back end to begin initiating our game, which is listening with:
         }, 80);
     });
 
-This tells socket that a player is prepared to be "connected" to the game, generate a socket ID and begin checking every 80ms for various packet data being sent from the front end in the same intervals. These packets are handed off for use in our Entity class(shared attributes between Player and Projectile) and front end to know to begin generating these new entities:
+This tells socket that a player is prepared to be "connected" to the game, generate a socket ID and begin informing the game every 80ms to send various packet data from the front end in the same intervals. These packets are handed off for use in our Entity class(shared attributes between Player and Projectile) and front end to know to begin generating these new entities:
 
 *../server/Entities.js beginning from line 43*
 
@@ -269,7 +269,7 @@ this information is immediately passed over to our front end mirror, the Player 
             self.ultimate = initPack.ultimate;
             self.map = initPack.map;
 
-Now that we have passed the relevant information to our client from the back end, we need to provide some visualization for our user to enjoy their newly created charater. We do this by passing the information to canvas, give it a context (ctx) to draw in, and provide the math to know where to place everything.
+Now that we have passed the relevant information to our client from the back end, we need to provide some visualization for our user to enjoy their newly created character. We do this by passing the information to canvas, give it a context (ctx) to draw in, and provide the math to know where to place everything.
 
 *../client/src/pages/Game.js beginning from line 90*
 
@@ -295,9 +295,9 @@ Now that we have passed the relevant information to our client from the back end
         Player.list[self.id] = self;
         return self;
 
-Our Player.list[selfId] is defined in our server-side Player constructor as a culmination of all the properties we handed off in the self.getInitpack. Upon getting the init pack, we then push all the paramets of our new Player into an empty object in both the front and back end creating a mirrored Player.list to simplify the passing of information in both our client side and server side. When drawing, we first determine which map the player is in (currently either TUNDRA or PALACE)- once we've determined, we simply return when canvas attempts to draw the player on the alternative map. This instantiates our users and prevents them from affecting users on a different map, keeping both maps as seperate pseudo lobbies. Next we aim to define the x and y of the players by taking the individual's x and y and adjusting relative to the center of the canvas. Next we define the size of the images being rendered, for our current image sizes a division factor of 16 provided the sweet spot for visibility to canvas view consumption ratio. Finally we draw up the health bar of the characters using a fillRect and use simple algebra to have the bars decrease as the Player.maxHealth stat is decreased (by being hit with Projectiles).
+Our Player.list[selfId] is defined in our server-side Player constructor as a culmination of all the properties we handed off in the self.getInitpack. Upon getting the init pack, we then push all the parameters of our new Player into an empty object in both the front and back end creating a mirrored Player.list to simplify the passing of information in both our client side and server side. When drawing, we first determine which map the player is in (currently either TUNDRA or PALACE)- once we've determined, we simply return when canvas attempts to draw the player on the alternative map. This instantiates our users and prevents them from affecting users on a different map, keeping both maps as seperate pseudo lobbies. Next we aim to define the x and y of the players by taking the individual's x and y and adjusting relative to the center of the canvas. Next we define the size of the images being rendered, for our current image sizes a division factor of 16 provided the sweet spot for visibility to canvas view consumption ratio. Finally we draw up the health bar of the characters using a fillRect and use simple algebra to have the bars decrease as the Player.maxHealth stat is decreased (by being hit with Projectiles).
 
-This process is mirrored by the Projectile properties which similarly has mirrored properties and a Projectile.list on each end, the drawing process is the same but with the same differences of drawing perpetually moving entities that follow the path of our angle as previously defined using atan2 and the relative center of our canvas.
+This process is mimic'd by the Projectile properties which similarly has mirrored properties and a Projectile.list on each end, the drawing process is the same but with the same differences of drawing perpetually moving entities that follow the path of our angle as previously defined using atan2 and the relative center of our canvas.
 
 
 ## Update Pack
@@ -372,4 +372,59 @@ Our server is emitting our trinity packages every 80ms, we then set our Game fil
 
 # Advanced Canvas
 
-Now that we've discussed the life cycle of the game and a brief mentioning
+Now that we've discussed the life cycle of the game and a brief mentioning of how use context 2d allows us to draw our characters and snowballs, we will discuss some of the more complex features canvas offers and how they are used within the Polar Palace application. It is worth mentioning that Polar Palace actually renders two canvas simultaneously, one draws the bulk of our information and game state, the second canvas is mostly transparent but draws simple UI materials (currently only our player's "level" attribute but in the future much more!). On inception, all UI elements were drawn on a single canvas, but profiling game performance quickly showed that constantly re-rendering a largely static option such as a player's level was a costly endeavor. Therefore, it was favorable to simply have a secondary canvas that simply acts as an overlay and only needs to re-render when a user gains a level (by defeating another player).
+
+With that out of the way, one key issue with Canvas is that items that are drawn on the canvas are perpetual- when a character, for instance, makes a movement action, there will be a trail of rendered characters leading up to the character's current game state location (x, y). To remove these residual "phantoms" so to speak, it is important that with each update the canvas is completely wiped clean and re-rendered with new updated draws for each particular element. This created numerous issues on how best to handle the mechanics. After trialing keeping each draw element in charge of clearing its own draw (Players, Projectiles, Map, etc) it became too time intensive to constantly go between all these elements and make adjustments for bug fixes. As a solution, a single function was created to handle the operations of clearing and initiating a re-draw all elements within the canvas: 
+
+*../client/src/pages/Game.js beginning from line 220
+
+        // Loop through the players and projectile lists and draw them on the canvas.
+    setInterval(()=> {
+        if(!selfId) {
+            return
+        };
+        ctx.clearRect(0,0,500,500);
+        drawMap();
+        drawLevel();
+        for(let i in Player.list) {
+            Player.list[i].draw();)
+        }
+        for(let i in Projectile.list) {
+            Projectile.list[i].draw();
+        }
+    }, 80);
+
+Here we set a time interval of 80ms keeping in line with the emissions of our trinity packs from the server. The client then checks to see if any players or projectiles actively exist in the game state, and if not, simply shuts down. However, in the more useful case where players and/or projectiles do exist, the very first action required is to completely clean out the entire canvas element providing us with a literal blank canvas. From there we initiate drawing the map with:
+
+*../client/src/pages/Game.js beginning from line 237
+
+        let drawMap = ()=> {
+        let player = Player.list[selfId];
+        let x = 250 - player.x;
+        let y = 250 - player.y;
+        ctx.drawImage(Img.map[player.map], x, y);
+    }
+
+This allows us to draw the players on the map given their current location. We then initiate updating our overlay for the very first time: 
+
+*../client/src/pages/Game.js beginning from line 244
+
+    let drawLevel = ()=> {
+        if(lastLevel === Player.list[selfId].level) {
+            return;
+        }
+        lastLevel = Player.list[selfId].level;
+        ctxUi.clearRect( 0, 0, 500, 500);
+        ctxUi.fillStyle = 'black';
+        ctxUi.fillText(Player.list[selfId].level,0,30);
+    }
+
+As discussed previously regarding profiling costs, drawing a number on canvas is surprisingly data dense and therefore it is important to only actively render when absolutely necessary- so within this 80ms interval we begin by checking if the player's level has changed at all. If it hasn't, simply do nothing. Otherwise, update the level, clear out the overlay canvas, and draw the new level on the top left of the canvas.
+
+## Recap
+
+One of the key issues with canvas is the need to constantly clear the canvas of all draws and then redraw, by keeping the clear and re-draw functionality together and on an interval that mirrors our server side, we keep to our theme of mirrored end-to-end while also keeping an easily maintained source for the majority of our drawing functionality. Our UI canvas overlay yields stronger performance while seemlessly integrating itself in the game optimizing our UX. While the functionality in its current state does little with this functionality, its design lends itself to future scalability and feature additions such as tracking available ultimate use or potions (cuppas) which are currently in the development pipeline.
+
+# Questions
+
+If after reading this there are any further questions or comments, please feel free to email me at m4tt4d1n@gmail.com, I will reply at my earliest convenience.
