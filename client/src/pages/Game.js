@@ -11,6 +11,7 @@ import Auth from '../utils/auth'
 // import Player from '../classes/Player';
 // import Projectile from '../classes/Projectile';
 import { ChoiceContext } from '../utils/Context';
+import './game.css'
 
 // Import the `useParams()` hook
 import { useParams } from 'react-router-dom';
