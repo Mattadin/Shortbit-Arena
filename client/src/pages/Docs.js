@@ -26,6 +26,19 @@ const Docs = () => {
             </div>
             <center>
             <div className="docs__align">
+                <h2> Goals </h2>
+                <p>
+                    The goal of this documentation is to provide a brief overview of the functionality of Polar Palace where technical
+                    knowledge is less important for grasping the overall picture on uniting various technologies. Herein, one may find 
+                    full documentation to how each individual piece of technology works and its specific use case within the Polar Palace
+                    application. For those seeking code breakdowns and advanced concepts of javascript applications of these technologies,
+                    an in-depth markdown of the functionality of the game is linked <a href="https://github.com/Mattadin/polar-palace/blob/main/TechnicalDocs.md"> here </a>
+                </p>
+                <a href="#toc">Back to top</a>
+            </div>
+            </center>
+            <center>
+            <div className="docs__align">
                 <h2 id="canvas"> Canvas </h2>
                 <p>
                  Canvas API allows users to draw various graphics including shapes and images
