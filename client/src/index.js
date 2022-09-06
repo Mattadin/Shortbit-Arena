@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-// import { io } from 'https://cdn.socket.io/4.4.1/socket.io.esm.min.js';
 import { io } from 'socket.io-client'
 
 const socket = io();
